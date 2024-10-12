@@ -1,83 +1,232 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedMenu, loadSelectedMenu } from "../_utils/menu/menuSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome, faFolder, faUser } from "@fortawesome/free-solid-svg-icons";
+import { usePathname } from "next/navigation";
+
+const MenuItem = ({
+  href,
+  label,
+  icon,
+  menuKey,
+  selectedMenu,
+  handleMenuClick,
+}: {
+  href: string;
+  label: string;
+  icon: any;
+  menuKey: string;
+  selectedMenu: string;
+  handleMenuClick: (menu: string) => void;
+}) => (
+  <Link
+    href={href}
+    onClick={() => handleMenuClick(menuKey)}
+    className={`font-Poppins font-semibold rounded-lg p-3 flex items-center transition-colors duration-75 ${
+      selectedMenu === menuKey ? "bg-[#3F3B26] text-white" : ""
+    }`}
+  >
+    <FontAwesomeIcon icon={icon} className="mr-2 w-4 h-4" />
+    {label}
+  </Link>
+);
+
+// Memoized version untuk mencegah render ulang tidak perlu
+const MemoizedMenuItem = memo(MenuItem);
+
+const ExpandableMenu = ({
+  label,
+  icon,
+  children,
+}: {
+  label: string;
+  icon: any;
+  children: React.ReactNode;
+}) => (
+  <details open>
+    <summary className="font-Poppins font-bold flex items-center cursor-pointer p-3">
+      <FontAwesomeIcon icon={icon} className="mr-2 w-4 h-4" />
+      {label}
+    </summary>
+    <ul className="ml-4">{children}</ul>
+  </details>
+);
 
 const Topbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
+  const pathname = usePathname();
+
+  const selectedMenuFromRedux = useSelector(
+    (state: any) => state.menu.selectedMenu
+  );
+  const [selectedMenu, setSelectedMenuLocal] = useState<string>("");
+
+  useEffect(() => {
+    setSelectedMenuLocal(selectedMenuFromRedux);
+  }, [selectedMenuFromRedux]);
+
+  const handleMenuClick = useCallback(
+    (menu: string) => {
+      setSelectedMenuLocal(menu);
+      dispatch(setSelectedMenu(menu));
+    },
+    [dispatch]
+  );
+
+  useEffect(() => {
+    dispatch(loadSelectedMenu());
+  }, [dispatch]);
+
+  // Mapping pathname untuk sinkronisasi dengan menu
+  useEffect(() => {
+    const pathToMenu: { [key: string]: string } = {
+      "/data-master/jenis-pengaduan": "jenis-pengaduan",
+      "/dashboard": "dashboard",
+      "/data-master/kabupaten-kota": "kabupaten-kota",
+      "/data-account/kab-kota": "admin-kab-kota",
+      "/data-account/masyarakat": "masyarakat",
+      "/data-account/petugas": "petugas",
+      "/pengaduan": "pengaduan",
+    };
+
+    if (pathToMenu[pathname]) {
+      setSelectedMenuLocal(pathToMenu[pathname]); // Update state lokal cepat
+      dispatch(setSelectedMenu(pathToMenu[pathname])); // Update Redux
+    }
+  }, [pathname, dispatch]);
+
   return (
     <>
-      <div className="drawer">
-        <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col">
-          {/* Navbar */}
-          <div className="navbar bg-base-300 w-full">
-            <div className="flex-none xl:hidden">
-              <label
-                htmlFor="my-drawer-3"
-                aria-label="open sidebar"
-                className="btn btn-square btn-ghost"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  className="inline-block h-6 w-6 stroke-current"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  ></path>
-                </svg>
-              </label>
-            </div>
-            <div className="mx-2 flex-1 px-2 flex justify-end">
-              <div className="avatar">
-                <Link href={"/dashboard"}>
-                  <div className="w-10 h-10 rounded-full overflow-hidden">
-                    <img
-                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                      alt="User Avatar"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </Link>
-              </div>
-            </div>
+      <div className="fixed w-full bg-white z-10 flex justify-between p-3 items-center shadow-lg">
+        <div className="flex-none xl:hidden">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="open sidebar"
+            className="btn btn-square btn-ghost"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="inline-block h-6 w-6 stroke-current"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <div className="mx-2 flex-1 flex justify-end flex-row">
+          <div className="w-1/2 justify-start pl-2 font-Poppins font-bold flex items-center">
+            Lapor Pak Sumbar
           </div>
-          {/* Page content here */}
+          <div className="avatar w-1/2 justify-end">
+            <Link href={"/dashboard"}>
+              <div className="w-10 h-10 rounded-full overflow-hidden">
+                <img
+                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  alt="User Avatar"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </Link>
+          </div>
         </div>
-        <div className="drawer-side">
-          <label
-            htmlFor="my-drawer-3"
-            aria-label="close sidebar"
-            className="drawer-overlay"
-          ></label>
+      </div>
 
-          <ul className="menu bg-base-200 min-h-full w-80 p-4">
-            <h1 className="mb-8 ">Lapor Pak Sumbar</h1>
-            <li>
-              <Link href={"/dashboard"}>Dashboard</Link>
-            </li>
-            <li>
-              <details open>
-                <summary>Parent</summary>
-                <ul>
-                  <li>
-                    <a>Submenu 1</a>
-                  </li>
-                  <li>
-                    <a>Submenu 2</a>
-                  </li>
-                </ul>
-              </details>
-            </li>
-            <li>
-              <a>Item 3</a>
-            </li>
-          </ul>
-        </div>
+      {/* Sidebar overlay for mobile */}
+      <div
+        className={`xl:hidden fixed inset-0 z-20 bg-black bg-opacity-50 transition-opacity ${
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsOpen(false)}
+      ></div>
+
+      {/* Sidebar mobile */}
+      <div
+        className={`xl:hidden fixed top-0 left-0 z-30 h-full w-64 bg-white transform transition-transform ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <h1 className="mb-8 p-5">Lapor Pak Sumbar</h1>
+        <ul className="menu p-5">
+          <li>
+            <MemoizedMenuItem
+              href="/dashboard"
+              label="Dashboard"
+              icon={faHome}
+              menuKey="dashboard"
+              selectedMenu={selectedMenu}
+              handleMenuClick={handleMenuClick}
+            />
+          </li>
+          <li>
+            <ExpandableMenu label="Data Master" icon={faFolder}>
+              <MemoizedMenuItem
+                href="/data-master/jenis-pengaduan"
+                label="Jenis Pengaduan"
+                icon={faFolder}
+                menuKey="jenis-pengaduan"
+                selectedMenu={selectedMenu}
+                handleMenuClick={handleMenuClick}
+              />
+              <MemoizedMenuItem
+                href="/data-master/kabupaten-kota"
+                label="Kabupaten / Kota"
+                icon={faFolder}
+                menuKey="kabupaten-kota"
+                selectedMenu={selectedMenu}
+                handleMenuClick={handleMenuClick}
+              />
+            </ExpandableMenu>
+          </li>
+          <li>
+            <ExpandableMenu label="Data Account" icon={faUser}>
+              <MemoizedMenuItem
+                href="/data-account/kab-kota"
+                label="Admin Kab/Kota"
+                icon={faUser}
+                menuKey="admin-kab-kota"
+                selectedMenu={selectedMenu}
+                handleMenuClick={handleMenuClick}
+              />
+              <MemoizedMenuItem
+                href="/data-account/petugas"
+                label="Petugas"
+                icon={faUser}
+                menuKey="petugas"
+                selectedMenu={selectedMenu}
+                handleMenuClick={handleMenuClick}
+              />
+              <MemoizedMenuItem
+                href="/data-account/masyarakat"
+                label="Masyarakat"
+                icon={faUser}
+                menuKey="masyarakat"
+                selectedMenu={selectedMenu}
+                handleMenuClick={handleMenuClick}
+              />
+            </ExpandableMenu>
+          </li>
+          <li>
+            <MemoizedMenuItem
+              href="/pengaduan"
+              label="Data Pengaduan"
+              icon={faFolder}
+              menuKey="pengaduan"
+              selectedMenu={selectedMenu}
+              handleMenuClick={handleMenuClick}
+            />
+          </li>
+        </ul>
       </div>
     </>
   );

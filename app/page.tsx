@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="items-center justify-center flex min-h-screen min-w-screen">
+    <div className="items-center justify-center flex  min-w-screen">
       <div className="h-[30rem] w-10/12 lg:w-1/2 p-5 lg:pt-10 bg-white shadow-xl rounded-md flex flex-col items-center">
         <h1 className="font-Poppins font-semibold text-2xl text-black text-center">
           Login

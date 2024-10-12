@@ -1,6 +1,6 @@
 import React from "react";
 
-const dashboard = () => {
+const masyarakat = () => {
   return (
     <div className="flex p-4 flex-col">
       <div className="font-Poppins font-bold text-3xl">Hallo,</div>
@@ -9,4 +9,4 @@ const dashboard = () => {
   );
 };
 
-export default dashboard;
+export default masyarakat;
