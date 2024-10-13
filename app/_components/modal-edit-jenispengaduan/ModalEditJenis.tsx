@@ -1,23 +1,30 @@
 // components/ModalEditJenis.tsx
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/app/_store/store";
+import axios from "axios";
+import { fetchData } from "@/app/_utils/data/dataSlice";
 
 interface ModalEditJenisProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { id: number; jenisPengaduan: string }) => void;
-  initialData: { id: number; jenisPengaduan: string };
+  onSubmit: () => void;
+  initialData: { _id: string; jenisPengaduan: string };
 }
 
 const ModalEditJenis: React.FC<ModalEditJenisProps> = ({
   isOpen,
   onClose,
-  onSubmit,
   initialData,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   if (!isOpen) return null;
 
   const validationSchema = Yup.object({
@@ -31,9 +38,24 @@ const ModalEditJenis: React.FC<ModalEditJenisProps> = ({
         <Formik
           initialValues={initialData}
           validationSchema={validationSchema}
-          onSubmit={(values) => {
-            onSubmit(values);
-            onClose();
+          onSubmit={async (values) => {
+            setIsSubmitting(true);
+            try {
+              const response = await axios.put(
+                "http://localhost:5000/api/jenispengaduan",
+                values,
+                { headers: { "Content-Type": "application/json" } }
+              );
+
+              if (response.status !== 200)
+                throw new Error("Network response was not ok");
+              dispatch(fetchData());
+              onClose();
+            } catch (error) {
+              console.error("Error:", error);
+            } finally {
+              setIsSubmitting(false);
+            }
           }}
         >
           {() => (
@@ -63,9 +85,14 @@ const ModalEditJenis: React.FC<ModalEditJenisProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded"
+                  disabled={isSubmitting}
+                  className={`${
+                    isSubmitting
+                      ? "bg-gray-400"
+                      : "bg-yellow-500 hover:bg-yellow-600"
+                  } text-white font-semibold py-2 px-4 rounded`}
                 >
-                  Tambah
+                  {isSubmitting ? "Processing..." : "Perbarui"}
                 </button>
               </div>
             </Form>
