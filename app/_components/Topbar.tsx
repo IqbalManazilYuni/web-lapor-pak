@@ -102,7 +102,7 @@ const Topbar = () => {
 
   return (
     <>
-      <div className="fixed w-full bg-white z-10 flex justify-between p-3 items-center shadow-lg">
+      <div className="fixed w-full bg-white z-10 flex justify-between h-16 items-center shadow-lg">
         <div className="flex-none xl:hidden">
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -126,9 +126,9 @@ const Topbar = () => {
         </div>
         <div className="mx-2 flex-1 flex justify-end flex-row">
           <div className="w-1/2 justify-start pl-2 font-Poppins font-bold flex items-center">
-            Lapor Pak Sumbar
+            <img src="/icon.svg" alt="Icon" className="h-14 w-48" />
           </div>
-          <div className="avatar w-1/2 justify-end">
+          <div className="avatar w-1/2 justify-end flex items-center">
             <Link href={"/dashboard"}>
               <div className="w-10 h-10 rounded-full overflow-hidden">
                 <img
@@ -156,7 +156,7 @@ const Topbar = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <h1 className="mb-8 p-5">Lapor Pak Sumbar</h1>
+        <h1 className="mb-2 p-5 pb-3 font-Poppins font-bold text-lg">Lapor Pak Sumbar</h1>
         <ul className="menu p-5">
           <li>
             <MemoizedMenuItem

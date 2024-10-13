@@ -35,7 +35,6 @@ const MenuItem = ({
   </Link>
 );
 
-// Memoized version untuk mencegah render ulang tidak perlu
 const MemoizedMenuItem = memo(MenuItem);
 
 const ExpandableMenu = ({
@@ -81,7 +80,6 @@ const SidebarComponent = () => {
     dispatch(loadSelectedMenu());
   }, [dispatch]);
 
-  // Mapping pathname untuk sinkronisasi dengan menu
   useEffect(() => {
     const pathToMenu: { [key: string]: string } = {
       "/data-master/jenis-pengaduan": "jenis-pengaduan",
@@ -94,8 +92,8 @@ const SidebarComponent = () => {
     };
 
     if (pathToMenu[pathname]) {
-      setSelectedMenuLocal(pathToMenu[pathname]); // Update state lokal cepat
-      dispatch(setSelectedMenu(pathToMenu[pathname])); // Update Redux
+      setSelectedMenuLocal(pathToMenu[pathname]);
+      dispatch(setSelectedMenu(pathToMenu[pathname])); 
     }
   }, [pathname, dispatch]);
 
