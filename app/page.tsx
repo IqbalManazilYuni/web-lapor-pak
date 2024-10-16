@@ -3,6 +3,7 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useRouter } from "next/navigation";
 
 // Define types for form values
 interface LoginFormValues {
@@ -11,7 +12,7 @@ interface LoginFormValues {
 }
 
 const HomePage: React.FC = () => {
-  // Define validation schema using Yup
+  const router = useRouter();
   const validationSchema = Yup.object({
     email: Yup.string()
       .email("Invalid email format")
@@ -33,7 +34,7 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="items-center justify-center flex  min-w-screen">
+    <div className="items-center justify-center flex h-full w-full">
       <div className="h-[30rem] w-10/12 lg:w-1/2 p-5 lg:pt-10 bg-white shadow-xl rounded-md flex flex-col items-center">
         <h1 className="font-Poppins font-semibold text-2xl text-black text-center">
           Login
@@ -85,6 +86,7 @@ const HomePage: React.FC = () => {
                   <button
                     type="submit"
                     className="p-2 bg-green-500 text-white rounded-md w-full"
+                    onClick={()=>router.push("/dashboard")}
                   >
                     Login
                   </button>

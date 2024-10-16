@@ -13,8 +13,10 @@ import {
 import { AppDispatch, RootState } from "@/app/_store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchData } from "@/app/_utils/data/dataSlice";
-import ModalTambahJenis from "@/app/_components/modal-tambah-jenispengaduan/ModalTambahJenis";
-import ModalEditJenis from "@/app/_components/modal-edit-jenispengaduan/ModalEditJenis";
+import ModalTambahJenis from "@/app/_components/jenispengaduan/modal-tambah-jenispengaduan/ModalTambahJenis";
+import ModalEditJenis from "@/app/_components/jenispengaduan/modal-edit-jenispengaduan/ModalEditJenis";
+import ModalHapusJenis from "@/app/_components/jenispengaduan/modal-hapus-jenispengaduan/ModalHapusJenis";
+import SkeletonLoading from "@/app/_components/skeletonloading/SkeletonLoading";
 
 const jenisPengaduan = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,10 +31,25 @@ const jenisPengaduan = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentEditIndex, setCurrentEditIndex] = useState<string | null>(null);
+  const [currentDeleteIndex, setCurrentDeleteIndex] = useState<string | null>(
+    null
+  );
   const handleSubmitTambah = () => {
     handleCloseModal();
+  };
+
+  const handleOpenDeleteModal = (id: string) => {
+    const item = dataList.find((item) => item._id === id);
+    if (item) {
+      setCurrentDeleteIndex(id);
+      setIsDeleteModalOpen(true);
+    }
+  };
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
   };
 
   const handleOpenModal = () => {
@@ -57,6 +74,10 @@ const jenisPengaduan = () => {
 
   const handleSubmitEdit = () => {
     handleCloseEditModal();
+  };
+
+  const handleSubmitDelete = () => {
+    handleCloseDeleteModal();
   };
 
   useEffect(() => {
@@ -88,10 +109,8 @@ const jenisPengaduan = () => {
     indexOfLastItem
   );
 
-  // Calculate total pages
   const totalPages = Math.ceil(dataListSearch.length / itemsPerPage);
 
-  // Pagination handlers
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage((prev) => prev + 1);
@@ -111,7 +130,7 @@ const jenisPengaduan = () => {
         Data Jenis Pengaduan
       </div>
       {loading ? (
-        <div>Loading...</div>
+        <SkeletonLoading />
       ) : error ? (
         <div>Error: {error}</div>
       ) : (
@@ -191,7 +210,10 @@ const jenisPengaduan = () => {
                             <span>Edit</span>
                           </button>
 
-                          <button className="text-red-700 bg-red-200 w-24 h-8 rounded-2xl hover:bg-red-100 flex items-center justify-center">
+                          <button
+                            className="text-red-700 bg-red-200 w-24 h-8 rounded-2xl hover:bg-red-100 flex items-center justify-center"
+                            onClick={() => handleOpenDeleteModal(item._id)}
+                          >
                             <FontAwesomeIcon
                               icon={faTrash}
                               className="mx-1 w-3 h-3"
@@ -237,6 +259,17 @@ const jenisPengaduan = () => {
             onClose={handleCloseModal}
             onSubmit={handleSubmitTambah}
           />
+          {currentDeleteIndex !== null && (
+            <ModalHapusJenis
+              isOpen={isDeleteModalOpen}
+              onClose={handleCloseDeleteModal}
+              onSubmit={handleSubmitDelete}
+              initialData={
+                dataList.find((item) => item._id === currentDeleteIndex)!
+              }
+            />
+          )}
+
           {currentEditIndex !== null && (
             <ModalEditJenis
               isOpen={isEditModalOpen}

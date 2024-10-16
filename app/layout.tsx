@@ -56,7 +56,7 @@ export default function RootLayout({
               </div>
             </>
           )}
-          {pathname === "/" && <div className="p-4">{children}</div>}
+          {pathname === "/" && <div className="h-screen w-screen justify-center flex items-center">{children}</div>}
         </Provider>
       </body>
     </html>
