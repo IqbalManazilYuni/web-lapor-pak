@@ -21,3 +21,13 @@ export interface DataPengaduan {
     petugas: string,
     uri_foto: string,
 }
+
+export interface DataUser {
+    _id: string,
+    username: string,
+    name: string,
+    kota: string,
+    nomor_hp: string,
+    role: string,
+    addres: string,
+}

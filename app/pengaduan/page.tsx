@@ -3,10 +3,11 @@
 "use client";
 
 import {
-  faEdit,
+  faImage,
   faList,
-  faSquarePlus,
+  faMapMarkerAlt,
   faTrash,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
@@ -15,6 +16,8 @@ import SkeletonLoading from "../_components/skeletonloading/SkeletonLoading";
 import { AppDispatch, RootState } from "../_store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDataPengaduan } from "../_utils/data/dataPengaduan";
+import { fetchDataUser } from "../_utils/data/dataUser";
+import ModalTambahPetugasPengaduan from "../_components/pengaduan/ModalTambahPetugasPengaduan/ModalTambahPetugasPengaduan";
 
 const pengaduan = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,16 +28,47 @@ const pengaduan = () => {
     error,
   } = useSelector((state: RootState) => state.data2);
 
+  const { items: dataListUser } = useSelector(
+    (state: RootState) => state.data3
+  );
   const [dataListSearch, setDataListSearch] = useState(dataList);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
-  // const [currentEditIndex, setCurrentEditIndex] = useState<string | null>(null);
-  // const [currentDeleteIndex, setCurrentDeleteIndex] = useState<string | null>(
-  //   null
-  // );
+  const [isModalTambah, setIsModalTambah] = useState(false);
+  const [currentIndexTambah, setCurrentIndexTambah] = useState<string | null>(
+    null
+  );
+  const [currentKotaTambah, setCurrentKotaTambah] = useState<string | null>(
+    null
+  );
+
+  const handleOpenTambahPetugas = (id: string) => {
+    const item = dataList.find((item) => item._id === id);
+    if (item) {
+      setIsModalTambah(true);
+      setCurrentIndexTambah(id);
+      setCurrentKotaTambah(item.kabupatenkota);
+    }
+  };
+
+  const handleCloseTambahPetugas = () => {
+    setIsModalTambah(false);
+  };
+
+  const handleSubmitTambahPetugas = () => {
+    handleCloseTambahPetugas();
+    setCurrentIndexTambah(null);
+    setCurrentKotaTambah(null);
+  };
+
+  // Filtering user data based on kabupatenkota
+  const filteredUserData = dataListUser.filter((user) =>
+    user.addres?.toLowerCase().includes(currentKotaTambah?.toLowerCase() || "")
+  );
 
   useEffect(() => {
     dispatch(fetchDataPengaduan());
+    dispatch(fetchDataUser());
   }, [dispatch]);
 
   useEffect(() => {
@@ -48,7 +82,7 @@ const pengaduan = () => {
       setDataListSearch(dataList);
     } else {
       const filterData = dataList.filter((item) =>
-        item.nama_pelapor.toLowerCase().includes(searchText)
+        item.judul.toLowerCase().includes(searchText)
       );
       setDataListSearch(filterData);
       setCurrentPage(1);
@@ -76,6 +110,19 @@ const pengaduan = () => {
     }
   };
 
+  const handleOpenMaps = (id: string) => {
+    const data = currentDataList.filter((item) => item._id === id);
+    const { latitude, longitude } = JSON.parse(data[0].lokasi);
+    const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+    window.open(url);
+  };
+
+  const handleOpenImage = (id: string) => {
+    const data = currentDataList.filter((item) => item._id === id);
+    const uri = data[0].uri_foto;
+    window.open(uri);
+  };
+
   return (
     <div className="flex p-4 flex-col">
       <div className="font-Poppins font-bold text-3xl">Data Master</div>
@@ -95,15 +142,6 @@ const pengaduan = () => {
                 List Data Pengaduan
               </span>
             </div>
-            <div className="flex justify-end items-center xl:items-start w-1/2">
-              <button
-                // onClick={handleOpenModal}
-                className="bg-blue-200 text-blue-700 rounded-2xl w-36 h-10 hover:bg-blue-100 flex items-center justify-center"
-              >
-                <FontAwesomeIcon icon={faSquarePlus} className="mx-1 w-4 h-4" />
-                <span>Tambah Data</span>
-              </button>
-            </div>
           </div>
           <div className="border" />
           <div className="flex justify-end items-center my-5">
@@ -111,7 +149,7 @@ const pengaduan = () => {
               <input
                 type="text"
                 className="grow"
-                placeholder="Search"
+                placeholder="Search Judul Pengaduan"
                 onChange={(e) => handleSearch(e.target.value)}
               />
               <svg
@@ -128,16 +166,17 @@ const pengaduan = () => {
               </svg>
             </label>
           </div>
-          <div className="overflow-hidden rounded-t-lg">
+          <div className="overflow-x-auto rounded-t-lg">
             <table className="table rounded-t-lg">
               <thead className="bg-[#504A32] rounded-t-lg">
                 <tr className="text-white rounded-t-lg">
                   <th>No</th>
                   <th>Tanggal Pelaporan</th>
                   <th>Judul Pelaporan</th>
+                  <th>Nama Pelapor</th>
                   <th>Kota Pelaporan</th>
                   <th>Jenis Pengaduan</th>
-                  <th>Petugas Pengaduan</th>
+                  <th>Petugas</th>
                   <th>Status Pengaduan</th>
                   <th className="flex justify-center">Action</th>
                 </tr>
@@ -158,31 +197,59 @@ const pengaduan = () => {
                         <th>{indexOfFirstItem + index + 1}</th>
                         <td>{item.tanggal}</td>
                         <td>{item.judul}</td>
+                        <td>{item.nama_pelapor}</td>
                         <td>{item.kabupatenkota}</td>
                         <td>{item.jenis_pengaduan}</td>
                         <td>{item.petugas}</td>
-                        <td>{item.status}</td>
-                        <td className="xl:space-x-2 flex flex-col xl:flex-row justify-center items-center">
+                        <td>
+                          <div
+                            className={`text-white rounded-xl items-center flex justify-center ${
+                              item.status === "menunggu"
+                                ? "bg-red-600"
+                                : "bg-amber-950"
+                            }`}
+                          >
+                            {item.status === "menunggu"
+                              ? "Menunggu"
+                              : "Ditindaklanjuti"}
+                          </div>
+                        </td>
+                        <td className="xl:grid xl:grid-cols-2 xl:gap-1 justify-center items-center">
                           <button
-                            className="text-green-700 bg-green-200 w-24 h-8 rounded-2xl hover:bg-green-100 flex items-center justify-center"
-                            // onClick={() => handleOpenEditModal(item._id)}
+                            className="bg-blue-100 w-16 h-8 rounded-2xl hover:bg-blue-200 flex items-center justify-center my-2 xl:my-0"
+                            onClick={() => handleOpenImage(item._id)}
                           >
                             <FontAwesomeIcon
-                              icon={faEdit}
-                              className="mx-1 w-3 h-3"
+                              icon={faImage}
+                              className="w-4 h-4 text-blue-600"
                             />
-                            <span>Edit</span>
                           </button>
 
                           <button
-                            className="text-red-700 bg-red-200 w-24 h-8 rounded-2xl hover:bg-red-100 flex items-center justify-center"
-                            // onClick={() => handleOpenDeleteModal(item._id)}
+                            className="bg-blue-100 w-16 h-8 rounded-2xl hover:bg-blue-200 flex items-center justify-center my-2 xl:my-0"
+                            onClick={() => handleOpenMaps(item._id)}
                           >
                             <FontAwesomeIcon
-                              icon={faTrash}
-                              className="mx-1 w-3 h-3"
+                              icon={faMapMarkerAlt} // Map marker icon
+                              className="w-4 h-4 text-blue-600"
                             />
-                            <span>Delete</span>
+                          </button>
+
+                          <button
+                            className="bg-green-100 w-16 h-8 rounded-2xl hover:bg-green-200 flex items-center justify-center my-2 xl:my-0"
+                            onClick={() => handleOpenTambahPetugas(item._id)}
+                          >
+                            <FontAwesomeIcon
+                              icon={faUser} // User icon
+                              className="w-4 h-4 text-green-600"
+                            />
+                          </button>
+
+                          <button className="bg-red-100 w-16 h-8 rounded-2xl hover:bg-red-200 flex items-center justify-center my-2 xl:my-0">
+                            <FontAwesomeIcon
+                              icon={faTrash} // Trash icon
+                              className="w-4 h-4 text-red-600"
+                            />
                           </button>
                         </td>
                       </tr>
@@ -220,6 +287,17 @@ const pengaduan = () => {
               </div>
             </div>
           </div>
+          {currentIndexTambah !== null && currentKotaTambah !== null && (
+            <ModalTambahPetugasPengaduan
+              isOpen={isModalTambah}
+              onClose={handleCloseTambahPetugas}
+              onSubmit={handleSubmitTambahPetugas}
+              data={filteredUserData}
+              initialData={
+                dataList.find((item) => item._id === currentIndexTambah)!
+              }
+            />
+          )}
         </div>
       )}
     </div>
