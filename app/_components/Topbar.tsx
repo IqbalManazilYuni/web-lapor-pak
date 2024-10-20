@@ -92,6 +92,7 @@ const Topbar = () => {
       "/data-account/masyarakat": "masyarakat",
       "/data-account/petugas": "petugas",
       "/pengaduan": "pengaduan",
+      "/sertifikat": "sertifikat",
     };
 
     if (pathToMenu[pathname]) {
@@ -222,6 +223,16 @@ const Topbar = () => {
               label="Data Pengaduan"
               icon={faFolder}
               menuKey="pengaduan"
+              selectedMenu={selectedMenu}
+              handleMenuClick={handleMenuClick}
+            />
+          </li>
+          <li>
+            <MemoizedMenuItem
+              href="/sertifikat"
+              label="Data Sertifikat"
+              icon={faFolder}
+              menuKey="sertifikat"
               selectedMenu={selectedMenu}
               handleMenuClick={handleMenuClick}
             />

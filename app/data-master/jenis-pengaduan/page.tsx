@@ -241,7 +241,7 @@ const jenisPengaduan = () => {
                   onClick={handlePrevPage}
                   disabled={currentPage === 1}
                 >
-                  «
+                  Prev
                 </button>
                 <button className="join-item btn">{`Page ${currentPage}`}</button>
                 <button
@@ -249,7 +249,7 @@ const jenisPengaduan = () => {
                   onClick={handleNextPage}
                   disabled={currentPage === totalPages}
                 >
-                  »
+                  Next
                 </button>
               </div>
             </div>

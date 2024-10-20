@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchDataPengaduan } from "../_utils/data/dataPengaduan";
 import { fetchDataUser } from "../_utils/data/dataUser";
 import ModalTambahPetugasPengaduan from "../_components/pengaduan/ModalTambahPetugasPengaduan/ModalTambahPetugasPengaduan";
+import ModalHapusPengaduan from "../_components/pengaduan/modal-hapus-pengaduan/ModalHapusPengaduan";
 
 const pengaduan = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -41,6 +42,10 @@ const pengaduan = () => {
   const [currentKotaTambah, setCurrentKotaTambah] = useState<string | null>(
     null
   );
+  const [currentDeleteIndex, setCurrentDeleteIndex] = useState<string | null>(
+    null
+  );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleOpenTambahPetugas = (id: string) => {
     const item = dataList.find((item) => item._id === id);
@@ -49,6 +54,21 @@ const pengaduan = () => {
       setCurrentIndexTambah(id);
       setCurrentKotaTambah(item.kabupatenkota);
     }
+  };
+
+  const handleSubmitDelete = () => {
+    handleCloseDeleteModal();
+  };
+
+  const handleOpenDeleteModal = (id: string) => {
+    const item = dataList.find((item) => item._id === id);
+    if (item) {
+      setCurrentDeleteIndex(id);
+      setIsDeleteModalOpen(true);
+    }
+  };
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
   };
 
   const handleCloseTambahPetugas = () => {
@@ -249,7 +269,9 @@ const pengaduan = () => {
                             />
                           </button>
 
-                          <button className="bg-red-100 w-16 h-8 rounded-2xl hover:bg-red-200 flex items-center justify-center my-2 xl:my-0">
+                          <button className="bg-red-100 w-16 h-8 rounded-2xl hover:bg-red-200 flex items-center justify-center my-2 xl:my-0"
+                           onClick={() => handleOpenDeleteModal(item._id)}
+                           >
                             <FontAwesomeIcon
                               icon={faTrash} // Trash icon
                               className="w-4 h-4 text-red-600"
@@ -276,7 +298,7 @@ const pengaduan = () => {
                   onClick={handlePrevPage}
                   disabled={currentPage === 1}
                 >
-                  «
+                  Prev
                 </button>
                 <button className="join-item btn">
                   {`Page ${currentPage}`}
@@ -286,7 +308,7 @@ const pengaduan = () => {
                   onClick={handleNextPage}
                   disabled={currentPage === totalPages}
                 >
-                  »
+                  Next
                 </button>
               </div>
             </div>
@@ -299,6 +321,16 @@ const pengaduan = () => {
               data={filteredUserData}
               initialData={
                 dataList.find((item) => item._id === currentIndexTambah)!
+              }
+            />
+          )}
+          {currentDeleteIndex !== null && (
+            <ModalHapusPengaduan
+              isOpen={isDeleteModalOpen}
+              onClose={handleCloseDeleteModal}
+              onSubmit={handleSubmitDelete}
+              initialData={
+                dataList.find((item) => item._id === currentDeleteIndex)!
               }
             />
           )}

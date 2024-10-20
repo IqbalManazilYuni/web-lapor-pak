@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedMenu, loadSelectedMenu } from "../_utils/menu/menuSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faFolder, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faFolder, faUser, faGear, faCommentDots, faFile } from "@fortawesome/free-solid-svg-icons";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
@@ -89,6 +89,8 @@ const SidebarComponent = () => {
       "/data-account/masyarakat": "masyarakat",
       "/data-account/petugas": "petugas",
       "/pengaduan": "pengaduan",
+      "/sertifikat": "sertifikat",
+
     };
 
     if (pathToMenu[pathname]) {
@@ -111,7 +113,7 @@ const SidebarComponent = () => {
           />
         </li>
         <li>
-          <ExpandableMenu label="Data Master" icon={faFolder}>
+          <ExpandableMenu label="Data Master" icon={faGear}>
             <MemoizedMenuItem
               href="/data-master/jenis-pengaduan"
               label="Jenis Pengaduan"
@@ -162,8 +164,18 @@ const SidebarComponent = () => {
           <MemoizedMenuItem
             href="/pengaduan"
             label="Data Pengaduan"
-            icon={faFolder}
+            icon={faCommentDots}
             menuKey="pengaduan"
+            selectedMenu={selectedMenu}
+            handleMenuClick={handleMenuClick}
+          />
+        </li>
+        <li>
+          <MemoizedMenuItem
+            href="/sertifikat"
+            label="Data Sertifikat"
+            icon={faFile}
+            menuKey="sertifikat"
             selectedMenu={selectedMenu}
             handleMenuClick={handleMenuClick}
           />
