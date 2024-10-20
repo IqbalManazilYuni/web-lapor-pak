@@ -9,6 +9,8 @@ import { Provider } from "react-redux";
 import store from "./_store/store";
 import { metadata } from "./_utils/metaData"; // Import metadata
 import { usePathname } from "next/navigation";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Poppins = localFont({
   src: [
@@ -47,16 +49,24 @@ export default function RootLayout({
       </head>
       <body className={`${Poppins.variable} antialiased bg-slate-100`}>
         <Provider store={store}>
+          <ToastContainer />
+
           {pathname !== "/" && (
             <>
               <Topbar />
               <div className="flex h-screen pt-16">
                 <SidebarComponent />
-                <div className="flex-1 overflow-y-auto p-4 xl:ml-64">{children}</div>
+                <div className="flex-1 overflow-y-auto p-4 xl:ml-64">
+                  {children}
+                </div>
               </div>
             </>
           )}
-          {pathname === "/" && <div className="h-screen w-screen justify-center flex items-center">{children}</div>}
+          {pathname === "/" && (
+            <div className="h-screen w-screen justify-center flex items-center">
+              {children}
+            </div>
+          )}
         </Provider>
       </body>
     </html>

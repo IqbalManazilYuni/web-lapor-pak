@@ -9,7 +9,7 @@ import axios from "axios";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
 import { toast } from "react-toastify";
 
-interface ModalUbahPetugasProps {
+interface ModalUbahMasyarakatProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
@@ -18,7 +18,7 @@ interface ModalUbahPetugasProps {
   };
 }
 
-const ModalUbahPetugas: React.FC<ModalUbahPetugasProps> = ({
+const ModalUbahMasyarakat: React.FC<ModalUbahMasyarakatProps> = ({
   isOpen,
   onClose,
   initialData,
@@ -45,16 +45,17 @@ const ModalUbahPetugas: React.FC<ModalUbahPetugasProps> = ({
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-96 m-2">
         <h2 className="text-lg font-semibold mb-4">
-          Perbarui Password Petugas
+          Perbarui Password Masyarakat
         </h2>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             if (values.password !== values.konfirmasiPassword) {
-              toast.error("Password dan Konfirmasi Tidak sama")
-              return null;
+              toast.error("Password dan Konfirmasi Tidak sama");
+              return;
             }
+
             setIsSubmitting(true);
             try {
               const response = await axios.put(
@@ -64,6 +65,8 @@ const ModalUbahPetugas: React.FC<ModalUbahPetugasProps> = ({
               );
               if (response.status !== 200)
                 throw new Error("Network response was not ok");
+              if (response.data.code === 200)
+                toast.success(response.data.message);
               dispatch(fetchDataUser());
               onClose();
             } catch (error) {
@@ -136,4 +139,4 @@ const ModalUbahPetugas: React.FC<ModalUbahPetugasProps> = ({
   );
 };
 
-export default ModalUbahPetugas;
+export default ModalUbahMasyarakat;

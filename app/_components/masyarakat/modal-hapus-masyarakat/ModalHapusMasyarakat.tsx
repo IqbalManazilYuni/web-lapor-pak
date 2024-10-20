@@ -4,15 +4,16 @@ import { AppDispatch } from "@/app/_store/store";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
-interface ModalHapusPetugasProps {
+interface ModalHapusMasyarakatProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
   initialData: { _id: string; username: string };
 }
 
-const ModalHapusPetugas: React.FC<ModalHapusPetugasProps> = ({
+const ModalHapusMasyarakat: React.FC<ModalHapusMasyarakatProps> = ({
   isOpen,
   onClose,
   initialData,
@@ -28,6 +29,7 @@ const ModalHapusPetugas: React.FC<ModalHapusPetugasProps> = ({
       console.log(response);
       if (response.status !== 200)
         throw new Error("Network response was not ok");
+      if (response.status === 200)toast.success(response.data.message);
       dispatch(fetchDataUser());
       onClose();
     } catch (error) {
@@ -40,8 +42,7 @@ const ModalHapusPetugas: React.FC<ModalHapusPetugasProps> = ({
       <div className="bg-white rounded-lg shadow-lg p-6 w-96">
         <h2 className="text-lg font-semibold mb-4">Hapus Data</h2>
         <h4 className="text-dm font-normal mb-8">
-          Apakah Anda Ingin Menghapus Data Petugas:{" "}
-          {initialData.username} ?
+          Apakah Anda Ingin Menghapus Data Masyarakat: {initialData.username} ?
         </h4>
         <div className="flex justify-end">
           <button
@@ -64,4 +65,4 @@ const ModalHapusPetugas: React.FC<ModalHapusPetugasProps> = ({
   );
 };
 
-export default ModalHapusPetugas;
+export default ModalHapusMasyarakat;

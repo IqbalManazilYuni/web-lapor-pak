@@ -15,20 +15,17 @@ const HomePage: React.FC = () => {
   const router = useRouter();
   const validationSchema = Yup.object({
     email: Yup.string()
-      .email("Invalid email format")
-      .required("Email is required"),
+      .email("Format Email Tidak Benar")
+      .required("Email Diperlukan"),
     password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),
+      .required("Password Diperlukan"),
   });
 
-  // Initial values for the form
   const initialValues: LoginFormValues = {
     email: "",
     password: "",
   };
 
-  // Handle form submission
   const handleSubmit = (values: LoginFormValues) => {
     console.log(values);
   };

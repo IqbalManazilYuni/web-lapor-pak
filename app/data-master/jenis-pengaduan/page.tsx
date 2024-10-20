@@ -158,7 +158,7 @@ const jenisPengaduan = () => {
               <input
                 type="text"
                 className="grow"
-                placeholder="Search"
+                placeholder="Search Jenis"
                 onChange={(e) => handleSearch(e.target.value)}
               />
               <svg

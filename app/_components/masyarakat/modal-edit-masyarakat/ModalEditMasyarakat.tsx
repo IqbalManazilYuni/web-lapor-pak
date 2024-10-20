@@ -1,4 +1,4 @@
-// components/ModalEditPetugas.tsx
+// components/ModalEditMasyarakat.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -7,11 +7,9 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/_store/store";
 import axios from "axios";
-import EachUtils from "@/app/_utils/EachUtils/EachUtils";
-import { KabupatenKota } from "@/app/_store/jenisPengaduanModel";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
 
-interface ModalEditPetugasProps {
+interface ModalEditMasyarakatProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
@@ -23,14 +21,12 @@ interface ModalEditPetugasProps {
     name: string;
     role: string;
   };
-  data: KabupatenKota[];
 }
 
-const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
+const ModalEditMasyarakat: React.FC<ModalEditMasyarakatProps> = ({
   isOpen,
   onClose,
   initialData,
-  data,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -40,9 +36,9 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
 
   const validationSchema = Yup.object({
     addres: Yup.string().required("Kabupaten atau Kota harus diisi"),
-    nomor_hp: Yup.string().required("Kontak Petugas harus diisi"),
-    name: Yup.string().required("Nama Petugas harus diisi"),
-    username: Yup.string().required("USername Petugas harus diisi"),
+    nomor_hp: Yup.string().required("Kontak Masyarakat harus diisi"),
+    name: Yup.string().required("Nama Masyarakat harus diisi"),
+    username: Yup.string().required("USername Masyarakat harus diisi"),
   });
 
   return (
@@ -77,7 +73,7 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
               <div className="xl:grid xl:grid-cols-2 xl:gap-2 flex flex-col">
                 <div className="mb-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    Username Petugas:
+                    Username Masyarakat:
                   </label>
                   <Field
                     type="text"
@@ -92,7 +88,7 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
                 </div>
                 <div className="mb-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    Nama Petugas:
+                    Nama Masyarakat:
                   </label>
                   <Field
                     type="text"
@@ -105,34 +101,24 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
                     className="text-red-500 text-sm"
                   />
                 </div>
-                <div className="mb-4">
+                <div className="mb-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    Kabupaten Atau Kota Petugas:
+                    Nama Masyarakat:
                   </label>
                   <Field
-                    as="select"
+                    type="addres"
                     name="addres"
-                    className="select select-bordered block w-full rounded-md mt-1 border-gray-300 p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <EachUtils
-                      of={data}
-                      render={(item, index) => (
-                        <option key={index} value={item.kabupatenkota}>
-                          {item.kabupatenkota}
-                        </option>
-                      )}
-                    />
-                  </Field>
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 h-12"
+                  />
                   <ErrorMessage
                     name="addres"
                     component="div"
                     className="text-red-500 text-sm"
                   />
                 </div>
-
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
-                    Kontak Petugas:
+                    Kontak Masyarakat:
                   </label>
                   <Field
                     type="text"
@@ -174,4 +160,4 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
   );
 };
 
-export default ModalEditPetugas;
+export default ModalEditMasyarakat;

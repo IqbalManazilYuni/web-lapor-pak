@@ -2,6 +2,10 @@
 
 "use client";
 
+import ModalEditMasyarakat from "@/app/_components/masyarakat/modal-edit-masyarakat/ModalEditMasyarakat";
+import ModalHapusMasyarakat from "@/app/_components/masyarakat/modal-hapus-masyarakat/ModalHapusMasyarakat";
+import ModalTambahMasyarakat from "@/app/_components/masyarakat/modal-tambah-masyarakat/ModalTambahMasyarakat";
+import ModalUbahMasyarakat from "@/app/_components/masyarakat/modal-ubat-masyarakat/ModalUbahMasyarakat";
 import SkeletonLoading from "@/app/_components/skeletonloading/SkeletonLoading";
 import { AppDispatch, RootState } from "@/app/_store/store";
 import { fetchDataKK } from "@/app/_utils/data/dataSliceKK";
@@ -30,75 +34,76 @@ const masyarakat = () => {
   const [dataListSearch, setDataListSearch] = useState(dataList);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [isUbahModalOpen, setIsUbahModalOpen] = useState(false);
-  // const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  // const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  // const [currentEditIndex, setCurrentEditIndex] = useState<string | null>(null);
-  // const [currentUbahIndex, setCurrentUbahIndex] = useState<string | null>(null);
-  // const [currentDeleteIndex, setCurrentDeleteIndex] = useState<string | null>(
-  //   null
-  // );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUbahModalOpen, setIsUbahModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentEditIndex, setCurrentEditIndex] = useState<string | null>(null);
+  const [currentUbahIndex, setCurrentUbahIndex] = useState<string | null>(null);
+  const [currentDeleteIndex, setCurrentDeleteIndex] = useState<string | null>(
+    null
+  );
 
-  // const handleSubmitTambah = () => {
-  //   handleCloseModal();
-  // };
+  const handleSubmitTambah = () => {
+    handleCloseModal();
+  };
 
-  // const handleUbahTambah = () => {
-  //   handleCloseUbahModal();
-  // };
+  const handleUbahTambah = () => {
+    handleCloseUbahModal();
+  };
 
-  // const handleOpenDeleteModal = (id: string) => {
-  //   const item = dataList.find((item) => item._id === id);
-  //   if (item) {
-  //     setCurrentDeleteIndex(id);
-  //     setIsDeleteModalOpen(true);
-  //   }
-  // };
-  // const handleCloseDeleteModal = () => {
-  //   setIsDeleteModalOpen(false);
-  // };
+  const handleOpenDeleteModal = (id: string) => {
+    const item = dataList.find((item) => item._id === id);
+    if (item) {
+      setCurrentDeleteIndex(id);
+      setIsDeleteModalOpen(true);
+    }
+  };
 
-  // const handleOpenModal = () => {
-  //   setIsModalOpen(true);
-  // };
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
 
-  // const handleCloseModal = () => {
-  //   setIsModalOpen(false);
-  // };
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
 
-  // const handleOpenUbahModal = (id: string) => {
-  //   const item = dataList.find((item) => item._id === id);
-  //   if (item) {
-  //     setCurrentUbahIndex(id);
-  //     setIsUbahModalOpen(true);
-  //   }
-  // };
-  // const handleCloseUbahModal = () => {
-  //   setIsUbahModalOpen(false);
-  //   setCurrentEditIndex(null);
-  // };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
-  // const handleOpenEditModal = (id: string) => {
-  //   const item = dataList.find((item) => item._id === id);
-  //   if (item) {
-  //     setCurrentEditIndex(id);
-  //     setIsEditModalOpen(true);
-  //   }
-  // };
+  const handleOpenUbahModal = (id: string) => {
+    const item = dataList.find((item) => item._id === id);
+    if (item) {
+      setCurrentUbahIndex(id);
+      setIsUbahModalOpen(true);
+    }
+  };
+  const handleCloseUbahModal = () => {
+    setIsUbahModalOpen(false);
+    setCurrentEditIndex(null);
+  };
 
-  // const handleCloseEditModal = () => {
-  //   setIsEditModalOpen(false);
-  //   setCurrentEditIndex(null);
-  // };
+  const handleOpenEditModal = (id: string) => {
+    const item = dataList.find((item) => item._id === id);
+    if (item) {
+      setCurrentEditIndex(id);
+      setIsEditModalOpen(true);
+    }
+  };
 
-  // const handleSubmitEdit = () => {
-  //   handleCloseEditModal();
-  // };
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setCurrentEditIndex(null);
+  };
 
-  // const handleSubmitDelete = () => {
-  //   handleCloseDeleteModal();
-  // };
+  const handleSubmitEdit = () => {
+    handleCloseEditModal();
+  };
+
+  const handleSubmitDelete = () => {
+    handleCloseDeleteModal();
+  };
 
   useEffect(() => {
     dispatch(fetchDataUser());
@@ -114,7 +119,9 @@ const masyarakat = () => {
     const searchText = text.toLowerCase();
 
     if (searchText === "") {
-      const filteredData = dataList.filter((item) => item.role === "masyarakat");
+      const filteredData = dataList.filter(
+        (item) => item.role === "masyarakat"
+      );
       setDataListSearch(filteredData);
     } else {
       const filterData = dataList
@@ -149,7 +156,9 @@ const masyarakat = () => {
   return (
     <div className="flex p-4 flex-col">
       <div className="font-Poppins font-bold text-3xl">Data Account</div>
-      <div className="font-Poppins font-normal text-lg mb-10">Data Masyarakat</div>
+      <div className="font-Poppins font-normal text-lg mb-10">
+        Data Masyarakat
+      </div>
       {loading ? (
         <SkeletonLoading />
       ) : error ? (
@@ -165,7 +174,7 @@ const masyarakat = () => {
             </div>
             <div className="flex justify-end items-center xl:items-start w-1/2">
               <button
-                // onClick={handleOpenModal}
+                onClick={handleOpenModal}
                 className="bg-blue-200 text-blue-700 rounded-2xl w-36 h-10 hover:bg-blue-100 flex items-center justify-center"
               >
                 <FontAwesomeIcon icon={faSquarePlus} className="mx-1 w-4 h-4" />
@@ -179,7 +188,7 @@ const masyarakat = () => {
               <input
                 type="text"
                 className="grow"
-                placeholder="Search"
+                placeholder="Search Username"
                 onChange={(e) => handleSearch(e.target.value)}
               />
               <svg
@@ -228,7 +237,7 @@ const masyarakat = () => {
                         <td className="xl:space-x-2 flex flex-col xl:flex-row justify-center items-center">
                           <button
                             className="text-green-700 bg-green-200 w-24 h-8 rounded-2xl hover:bg-green-100 flex items-center justify-center my-2 xl:my-0"
-                            // onClick={() => handleOpenEditModal(item._id)}
+                            onClick={() => handleOpenEditModal(item._id)}
                           >
                             <FontAwesomeIcon
                               icon={faEdit}
@@ -238,7 +247,7 @@ const masyarakat = () => {
                           </button>
                           <button
                             className="text-blue-700 bg-blue-200 w-24 h-8 rounded-2xl hover:bg-blue-100 flex items-center justify-center my-2 xl:my-0"
-                            // onClick={() => handleOpenUbahModal(item._id)}
+                            onClick={() => handleOpenUbahModal(item._id)}
                           >
                             <FontAwesomeIcon
                               icon={faRepeat}
@@ -248,7 +257,7 @@ const masyarakat = () => {
                           </button>
                           <button
                             className="text-red-700 bg-red-200 w-24 h-8 rounded-2xl hover:bg-red-100 flex items-center justify-center my-2 xl:my-0"
-                            // onClick={() => handleOpenDeleteModal(item._id)}
+                            onClick={() => handleOpenDeleteModal(item._id)}
                           >
                             <FontAwesomeIcon
                               icon={faTrash}
@@ -290,6 +299,41 @@ const masyarakat = () => {
               </div>
             </div>
           </div>
+          <ModalTambahMasyarakat
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            onSubmit={handleSubmitTambah}
+          />
+          {currentEditIndex !== null && (
+            <ModalEditMasyarakat
+              isOpen={isEditModalOpen}
+              onClose={handleCloseEditModal}
+              onSubmit={handleSubmitEdit}
+              initialData={
+                dataList.find((item) => item._id === currentEditIndex)!
+              }
+            />
+          )}
+          {currentUbahIndex !== null && (
+            <ModalUbahMasyarakat
+              isOpen={isUbahModalOpen}
+              onClose={handleCloseUbahModal}
+              onSubmit={handleUbahTambah}
+              initialData={
+                dataList.find((item) => item._id === currentUbahIndex)!
+              }
+            />
+          )}
+          {currentDeleteIndex !== null && (
+            <ModalHapusMasyarakat
+              isOpen={isDeleteModalOpen}
+              onClose={handleCloseDeleteModal}
+              onSubmit={handleSubmitDelete}
+              initialData={
+                dataList.find((item) => item._id === currentDeleteIndex)!
+              }
+            />
+          )}
         </div>
       )}
     </div>

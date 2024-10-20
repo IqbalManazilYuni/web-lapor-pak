@@ -184,7 +184,7 @@ const petugas = () => {
               <input
                 type="text"
                 className="grow"
-                placeholder="Search"
+                placeholder="Search Username"
                 onChange={(e) => handleSearch(e.target.value)}
               />
               <svg

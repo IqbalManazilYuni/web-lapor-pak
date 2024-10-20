@@ -156,7 +156,7 @@ const kabupatenKota = () => {
               <input
                 type="text"
                 className="grow"
-                placeholder="Search"
+                placeholder="Search Kab/Kota"
                 onChange={(e) => handleSearch(e.target.value)}
               />
               <svg

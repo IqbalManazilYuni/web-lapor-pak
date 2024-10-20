@@ -206,12 +206,16 @@ const pengaduan = () => {
                             className={`text-white rounded-xl items-center flex justify-center ${
                               item.status === "menunggu"
                                 ? "bg-red-600"
-                                : "bg-amber-950"
+                                : item.status === "ditindaklanjuti"
+                                ? "bg-amber-950"
+                                : "bg-green-500"
                             }`}
                           >
                             {item.status === "menunggu"
                               ? "Menunggu"
-                              : "Ditindaklanjuti"}
+                              : item.status === "ditindaklanjuti"
+                              ? "Ditindaklanjuti"
+                              : "Selesai"}
                           </div>
                         </td>
                         <td className="xl:grid xl:grid-cols-2 xl:gap-1 justify-center items-center">

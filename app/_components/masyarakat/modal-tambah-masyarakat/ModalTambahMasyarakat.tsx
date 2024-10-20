@@ -1,4 +1,3 @@
-// components/ModalEditPetugas.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -7,62 +6,58 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/_store/store";
 import axios from "axios";
-import EachUtils from "@/app/_utils/EachUtils/EachUtils";
-import { KabupatenKota } from "@/app/_store/jenisPengaduanModel";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
 
-interface ModalEditPetugasProps {
+interface ModalTambahMasyarakatProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
-  initialData: {
-    _id: string;
-    addres: string;
-    nomor_hp: string;
-    username: string;
-    name: string;
-    role: string;
-  };
-  data: KabupatenKota[];
 }
 
-const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
+const ModalTambahMasyarakat: React.FC<ModalTambahMasyarakatProps> = ({
   isOpen,
   onClose,
-  initialData,
-  data,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   if (!isOpen) return null;
 
+  const initialValues = {
+    addres: "",
+    nomor_hp: "",
+    name: "",
+    username: "",
+    password: "",
+    role: "masyarakat",
+  };
+
   const validationSchema = Yup.object({
-    addres: Yup.string().required("Kabupaten atau Kota harus diisi"),
-    nomor_hp: Yup.string().required("Kontak Petugas harus diisi"),
-    name: Yup.string().required("Nama Petugas harus diisi"),
-    username: Yup.string().required("USername Petugas harus diisi"),
+    password: Yup.string().required("Password harus diisi"),
+    addres: Yup.string().required("Alamat Masyarakat harus diisi"),
+    nomor_hp: Yup.string().required("Kontak Masyarakat harus diisi"),
+    name: Yup.string().required("Nama Masyarakat harus diisi"),
+    username: Yup.string().required("USername Masyarakat harus diisi"),
   });
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-[35rem]">
-        <h2 className="text-lg font-semibold mb-4">Edit Data</h2>
+      <div className="bg-white rounded-lg shadow-lg p-6 w-[35rem] m-2">
+        <h2 className="text-lg font-semibold mb-4">Tambah Data</h2>
         <Formik
-          initialValues={initialData}
+          initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             setIsSubmitting(true);
             try {
-              const response = await axios.put(
-                "http://localhost:5000/api/pengguna/edit-pengguna",
+              const response = await axios.post(
+                "http://localhost:5000/api/pengguna/register",
                 values,
                 { headers: { "Content-Type": "application/json" } }
               );
-
-              if (response.status !== 200)
+              if (response.status !== 201)
                 throw new Error("Network response was not ok");
+
               dispatch(fetchDataUser());
               onClose();
             } catch (error) {
@@ -72,17 +67,18 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
             }
           }}
         >
-          {() => (
+          {({ values }) => (
             <Form>
               <div className="xl:grid xl:grid-cols-2 xl:gap-2 flex flex-col">
                 <div className="mb-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    Username Petugas:
+                    Username Masyarakat:
                   </label>
                   <Field
                     type="text"
                     name="username"
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 h-12"
+                    value={values.username || ""}
                   />
                   <ErrorMessage
                     name="username"
@@ -92,12 +88,29 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
                 </div>
                 <div className="mb-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    Nama Petugas:
+                    Password Masyarakat:
+                  </label>
+                  <Field
+                    type="password"
+                    name="password"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 h-12"
+                    value={values.password || ""}
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
+                </div>
+                <div className="mb-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Nama Masyarakat:
                   </label>
                   <Field
                     type="text"
                     name="name"
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 h-12"
+                    value={values.name || ""}
                   />
                   <ErrorMessage
                     name="name"
@@ -107,22 +120,14 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
                 </div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
-                    Kabupaten Atau Kota Petugas:
+                    Alamat Masyarakat:
                   </label>
                   <Field
-                    as="select"
+                    type="addres"
                     name="addres"
-                    className="select select-bordered block w-full rounded-md mt-1 border-gray-300 p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <EachUtils
-                      of={data}
-                      render={(item, index) => (
-                        <option key={index} value={item.kabupatenkota}>
-                          {item.kabupatenkota}
-                        </option>
-                      )}
-                    />
-                  </Field>
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 h-12"
+                    value={values.addres || ""}
+                  />
                   <ErrorMessage
                     name="addres"
                     component="div"
@@ -132,12 +137,13 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
 
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
-                    Kontak Petugas:
+                    Kontak Masyarakat:
                   </label>
                   <Field
                     type="text"
                     name="nomor_hp"
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 h-12"
+                    value={values.nomor_hp || ""}
                   />
                   <ErrorMessage
                     name="nomor_hp"
@@ -146,6 +152,7 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
                   />
                 </div>
               </div>
+
               <div className="flex justify-end">
                 <button
                   type="button"
@@ -160,10 +167,10 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
                   className={`${
                     isSubmitting
                       ? "bg-gray-400"
-                      : "bg-yellow-500 hover:bg-yellow-600"
+                      : "bg-green-500 hover:bg-green-600"
                   } text-white font-semibold py-2 px-4 rounded`}
                 >
-                  {isSubmitting ? "Processing..." : "Perbarui"}
+                  {isSubmitting ? "Processing..." : "Tambah"}
                 </button>
               </div>
             </Form>
@@ -174,4 +181,4 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
   );
 };
 
-export default ModalEditPetugas;
+export default ModalTambahMasyarakat;
