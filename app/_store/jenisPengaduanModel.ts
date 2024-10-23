@@ -55,3 +55,8 @@ export interface Sertifikat {
     jumlahLaporan: string,
     uri_pdf: string,
 }
+
+export interface AuthState {
+    token: string | null;
+    isAuthenticated: boolean;
+}

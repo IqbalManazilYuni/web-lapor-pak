@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import Link from "next/link";
@@ -6,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSelectedMenu, loadSelectedMenu } from "../_utils/menu/menuSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faFolder, faUser } from "@fortawesome/free-solid-svg-icons";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const MenuItem = ({
   href,
@@ -60,6 +61,7 @@ const Topbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
   const pathname = usePathname();
+  const router = useRouter(); // Untuk navigasi halaman
 
   const selectedMenuFromRedux = useSelector(
     (state: any) => state.menu.selectedMenu
@@ -101,6 +103,10 @@ const Topbar = () => {
     }
   }, [pathname, dispatch]);
 
+  const handleLogout = async () => {
+    router.push("/");
+  };
+
   return (
     <>
       <div className="fixed w-full bg-white z-10 flex justify-between h-16 items-center shadow-lg">
@@ -129,16 +135,29 @@ const Topbar = () => {
           <div className="w-1/2 justify-start pl-2 font-Poppins font-bold flex items-center">
             <img src="/icon.svg" alt="Icon" className="h-14 w-48" />
           </div>
-          <div className="avatar w-1/2 justify-end flex items-center">
-            <Link href={"/dashboard"}>
-              <div className="w-10 h-10 rounded-full overflow-hidden">
-                <img
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  alt="User Avatar"
-                  className="w-full h-full object-cover"
-                />
+          <div className="w-1/2 justify-end flex items-center mr-5">
+            <div className="dropdown dropdown-end">
+              <div tabIndex={0} role="button" className="avatar ">
+                <div className="w-10 h-10 rounded-full overflow-hidden">
+                  <img
+                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    alt="User Avatar"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </div>
-            </Link>
+              <ul
+                tabIndex={0}
+                className="menu dropdown-content bg-base-100 rounded-box z-[1] mt-4 w-52 p-2 shadow"
+              >
+                <li>
+                  <a className="font-Poppins font-bold text-md">Profile</a>
+                </li>
+                <li onClick={() => handleLogout()}>
+                  <a className="font-Poppins font-bold text-md">Logout</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -157,7 +176,9 @@ const Topbar = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <h1 className="mb-2 p-5 pb-3 font-Poppins font-bold text-lg">Lapor Pak Sumbar</h1>
+        <h1 className="mb-2 p-5 pb-3 font-Poppins font-bold text-lg">
+          Lapor Pak Sumbar
+        </h1>
         <ul className="menu p-5">
           <li>
             <MemoizedMenuItem

@@ -7,6 +7,7 @@ import dataReducerPengaduan from '../_utils/data/dataPengaduan'
 import dataReducerUser from '../_utils/data/dataUser'
 import dataReducerSummary from '../_utils/data/dataSummary'
 import dataReducerSertifikat from "../_utils/data/dataSertifikat"
+import authReducer from "../_utils/data/dataAuth"
 const store = configureStore({
   reducer: {
     menu: menuReducer,
@@ -16,6 +17,7 @@ const store = configureStore({
     data3: dataReducerUser,
     data4: dataReducerSummary,
     data5: dataReducerSertifikat,
+    auth: authReducer,
   },
 });
 
