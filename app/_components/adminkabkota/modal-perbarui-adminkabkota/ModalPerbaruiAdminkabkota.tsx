@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-// components/ModalTambahPetugasPengaduan.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -8,55 +6,65 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/_store/store";
 import axios from "axios";
-import { DataUser } from "@/app/_store/jenisPengaduanModel";
-import EachUtils from "@/app/_utils/EachUtils/EachUtils";
-import { fetchDataPengaduan } from "@/app/_utils/data/dataPengaduan";
+import { fetchDataUser } from "@/app/_utils/data/dataUser";
+import { toast } from "react-toastify";
 
-interface ModalTambahPetugasPengaduanProps {
+interface ModalUbahAdminkabkotaProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
   initialData: {
     _id: string;
-    status: string;
-    petugas: string;
   };
-  data: DataUser[];
 }
 
-const ModalTambahPetugasPengaduan: React.FC<
-  ModalTambahPetugasPengaduanProps
-> = ({ isOpen, onClose, initialData, data }) => {
+const ModalUbahAdminkabkota: React.FC<ModalUbahAdminkabkotaProps> = ({
+  isOpen,
+  onClose,
+  initialData,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   if (!isOpen) return null;
 
+  const initialValues = {
+    _id: initialData._id,
+    password: "",
+    konfirmasiPassword: "",
+  };
+
   const validationSchema = Yup.object({
-    status: Yup.string().required("Status harus diisi"),
-    petugas: Yup.string().required("Petugas harus diisi"),
+    password: Yup.string().required("Password harus diisi"),
+    konfirmasiPassword: Yup.string().required(
+      "Konfirmasi Password Harus Diisi"
+    ),
   });
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-96">
-        <h2 className="text-lg font-semibold mb-4">Tambah Petugas</h2>
+      <div className="bg-white rounded-lg shadow-lg p-6 w-96 m-2">
+        <h2 className="text-lg font-semibold mb-4">
+          Perbarui Password Admin
+        </h2>
         <Formik
-          initialValues={initialData}
+          initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
+            if (values.password !== values.konfirmasiPassword) {
+              toast.error("Password dan Konfirmasi Tidak sama")
+              return null;
+            }
             setIsSubmitting(true);
             try {
               const response = await axios.put(
-                "http://localhost:5000/api/pengaduan/petugas",
+                "http://localhost:5000/api/pengguna/edit-password",
                 values,
                 { headers: { "Content-Type": "application/json" } }
               );
-
               if (response.status !== 200)
                 throw new Error("Network response was not ok");
-              dispatch(fetchDataPengaduan());
+              dispatch(fetchDataUser());
               onClose();
             } catch (error) {
               console.error("Error:", error);
@@ -65,54 +73,41 @@ const ModalTambahPetugasPengaduan: React.FC<
             }
           }}
         >
-          {() => (
+          {({ values }) => (
             <Form>
               <div className="mb-2">
                 <label className="block text-sm font-medium text-gray-700">
-                  Nama Petugas:
+                  Password Baru:
                 </label>
                 <Field
-                  as="select"
-                  name="petugas"
-                  className="select select-bordered block w-full rounded-md mt-1 border-gray-300 p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="" disabled>
-                    Pilih Petugas
-                  </option>
-                  <EachUtils
-                    of={data}
-                    render={(item, index) => (
-                      <option key={index} value={item.username}>
-                        {item.username}
-                      </option>
-                    )}
-                  />
-                </Field>
+                  type="password"
+                  name="password"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 h-12"
+                  value={values.password || ""}
+                />
                 <ErrorMessage
-                  name="petugas"
+                  name="password"
                   component="div"
                   className="text-red-500 text-sm"
                 />
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Status Pengaduan
+                  Konfirmasi Password Baru:
                 </label>
                 <Field
-                  as="select"
-                  name="status"
-                  className="select select-bordered block w-full rounded-md mt-1 border-gray-300 p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value={"menunggu"}>Menunggu</option>
-                  <option value={"ditindaklanjuti"}>Ditindaklanjuti</option>
-                  <option value={"selesai"}>Selesai</option>
-                </Field>
+                  type="password"
+                  name="konfirmasiPassword"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 h-12"
+                  value={values.konfirmasiPassword || ""}
+                />
                 <ErrorMessage
-                  name="status"
+                  name="konfirmasiPassword"
                   component="div"
                   className="text-red-500 text-sm"
                 />
               </div>
+
               <div className="flex justify-end">
                 <button
                   type="button"
@@ -127,7 +122,7 @@ const ModalTambahPetugasPengaduan: React.FC<
                   className={`${
                     isSubmitting
                       ? "bg-gray-400"
-                      : "bg-yellow-500 hover:bg-yellow-600"
+                      : "bg-green-500 hover:bg-green-600"
                   } text-white font-semibold py-2 px-4 rounded`}
                 >
                   {isSubmitting ? "Processing..." : "Perbarui"}
@@ -141,4 +136,4 @@ const ModalTambahPetugasPengaduan: React.FC<
   );
 };
 
-export default ModalTambahPetugasPengaduan;
+export default ModalUbahAdminkabkota;

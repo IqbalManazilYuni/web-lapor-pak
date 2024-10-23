@@ -31,3 +31,27 @@ export interface DataUser {
     role: string,
     addres: string,
 }
+
+export interface Summary {
+    tahun: string,
+    bulan: dataBulan[]
+}
+
+interface dataBulan {
+    bulan: string
+    pelapor: dataPelapor[]
+}
+
+interface dataPelapor {
+    namaPelapor: string
+    jumlahLaporan: string
+}
+
+export interface Sertifikat {
+    _id: string,
+    nama_pelapor: string,
+    tahun: string,
+    bulan: string,
+    jumlahLaporan: string,
+    uri_pdf: string,
+}

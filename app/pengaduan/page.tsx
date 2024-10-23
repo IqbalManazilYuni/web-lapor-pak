@@ -145,7 +145,7 @@ const pengaduan = () => {
 
   return (
     <div className="flex p-4 flex-col">
-      <div className="font-Poppins font-bold text-3xl">Data Master</div>
+      <div className="font-Poppins font-bold text-3xl">Data Pengaduan</div>
       <div className="font-Poppins font-normal text-lg mb-10">
         Data Pengaduan
       </div>
@@ -269,9 +269,10 @@ const pengaduan = () => {
                             />
                           </button>
 
-                          <button className="bg-red-100 w-16 h-8 rounded-2xl hover:bg-red-200 flex items-center justify-center my-2 xl:my-0"
-                           onClick={() => handleOpenDeleteModal(item._id)}
-                           >
+                          <button
+                            className="bg-red-100 w-16 h-8 rounded-2xl hover:bg-red-200 flex items-center justify-center my-2 xl:my-0"
+                            onClick={() => handleOpenDeleteModal(item._id)}
+                          >
                             <FontAwesomeIcon
                               icon={faTrash} // Trash icon
                               className="w-4 h-4 text-red-600"
@@ -285,13 +286,13 @@ const pengaduan = () => {
               </tbody>
             </table>
           </div>
-          <div className="flex my-5 flex-row">
-            <div className="w-1/2 justify-start items-center">
+          <div className="flex my-5 xl:flex-row flex-col items-center">
+            <div className="xl:w-1/2 justify-start items-center my-4">
               <span>
                 Data page {currentPage} dari {totalPages}
               </span>
             </div>
-            <div className="flex w-1/2 justify-end items-center">
+            <div className="flex xl:w-1/2 justify-end items-center">
               <div className="join">
                 <button
                   className="join-item btn"
@@ -300,9 +301,7 @@ const pengaduan = () => {
                 >
                   Prev
                 </button>
-                <button className="join-item btn">
-                  {`Page ${currentPage}`}
-                </button>
+                <button className="join-item btn">{`Page ${currentPage}`}</button>
                 <button
                   className="join-item btn"
                   onClick={handleNextPage}

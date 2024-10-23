@@ -269,13 +269,13 @@ const petugas = () => {
               </tbody>
             </table>
           </div>
-          <div className="flex my-5 flex-row">
-            <div className="w-1/2 justify-start items-center">
+          <div className="flex my-5 xl:flex-row flex-col items-center">
+            <div className="xl:w-1/2 justify-start items-center my-4">
               <span>
                 Data page {currentPage} dari {totalPages}
               </span>
             </div>
-            <div className="flex w-1/2 justify-end items-center">
+            <div className="flex xl:w-1/2 justify-end items-center">
               <div className="join">
                 <button
                   className="join-item btn"
