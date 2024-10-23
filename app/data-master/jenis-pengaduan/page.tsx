@@ -17,6 +17,7 @@ import ModalTambahJenis from "@/app/_components/jenispengaduan/modal-tambah-jeni
 import ModalEditJenis from "@/app/_components/jenispengaduan/modal-edit-jenispengaduan/ModalEditJenis";
 import ModalHapusJenis from "@/app/_components/jenispengaduan/modal-hapus-jenispengaduan/ModalHapusJenis";
 import SkeletonLoading from "@/app/_components/skeletonloading/SkeletonLoading";
+import { useRouter } from "next/navigation";
 
 const jenisPengaduan = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -101,6 +102,14 @@ const jenisPengaduan = () => {
       setCurrentPage(1);
     }
   };
+
+  const router = useRouter();
+  useEffect(() => {
+    if (error && error.includes("Token tidak valid, otorisasi gagal")) {
+      // Adjust the condition based on your error message
+      router.push("/"); // Redirect to the home page
+    }
+  }, [error, router]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;

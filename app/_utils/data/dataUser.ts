@@ -2,6 +2,7 @@
 import { DataUser } from '@/app/_store/jenisPengaduanModel';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import axiosInstance from '../interceptor';
 
 interface DataState {
   items: DataUser[];
@@ -16,8 +17,18 @@ const initialState: DataState = {
 };
 
 export const fetchDataUser = createAsyncThunk('data/fetchDataUser', async () => {
-  const response = await axios.get('http://localhost:5000/api/pengguna');
-  return response.data.payload;
+  try {
+    const response = await axiosInstance.get('/pengguna');
+    return response.data.payload;
+  } catch (error) {
+    console.error('Fetch error:', error); // Log the entire error object
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        throw error.response.data.message
+      }
+    }
+    throw error;
+  }
 });
 
 const dataSliceUser = createSlice({

@@ -2,6 +2,7 @@
 import { Summary } from '@/app/_store/jenisPengaduanModel';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import axiosInstance from '../interceptor';
 
 interface DataState {
     items: Summary[];
@@ -16,8 +17,19 @@ const initialState: DataState = {
 };
 
 export const fetchDataSummary = createAsyncThunk('data/fetchDataSummary', async () => {
-    const response = await axios.get('http://localhost:5000/api/pengaduan/summary');
-    return response.data.payload;
+
+    try {
+        const response = await axiosInstance.get('/pengaduan/summary');
+        return response.data.payload;
+    } catch (error) {
+        console.error('Fetch error:', error); // Log the entire error object
+        if (axios.isAxiosError(error)) {
+            if (error.response) {
+                throw error.response.data.message
+            }
+        }
+        throw error;
+    }
 });
 
 const dataSliceSummary = createSlice({

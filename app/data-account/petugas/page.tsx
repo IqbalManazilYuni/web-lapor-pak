@@ -19,6 +19,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -136,6 +137,14 @@ const petugas = () => {
     indexOfFirstItem,
     indexOfLastItem
   );
+
+  const router = useRouter();
+  useEffect(() => {
+    if (error && error.includes("Token tidak valid, otorisasi gagal")) {
+      // Adjust the condition based on your error message
+      router.push("/"); // Redirect to the home page
+    }
+  }, [error, router]);
 
   const totalPages = Math.ceil(dataListSearch.length / itemsPerPage);
 

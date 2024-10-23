@@ -17,6 +17,7 @@ import { fetchDataKK } from "@/app/_utils/data/dataSliceKK";
 import ModalTambahKabupatenKota from "@/app/_components/kabupatenkota/modal-tambah-kabupatenkota/ModalTambahKabupatenKota";
 import ModalHapusKabupatenKoto from "@/app/_components/kabupatenkota/modal-hapus-kabupatenkota/ModalHapusKabupatenKota";
 import SkeletonLoading from "@/app/_components/skeletonloading/SkeletonLoading";
+import { useRouter } from "next/navigation";
 
 const kabupatenKota = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -121,6 +122,13 @@ const kabupatenKota = () => {
       setCurrentPage((prev) => prev - 1);
     }
   };
+  const router = useRouter();
+  useEffect(() => {
+    if (error && error.includes("Token tidak valid, otorisasi gagal")) {
+      // Adjust the condition based on your error message
+      router.push("/"); // Redirect to the home page
+    }
+  }, [error, router]);
   return (
     <div className="flex p-4 flex-col">
       <div className="font-Poppins font-bold text-3xl">Data Master</div>

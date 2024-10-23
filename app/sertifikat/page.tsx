@@ -19,6 +19,7 @@ import { fetchDataUser } from "../_utils/data/dataUser";
 import ModalTambahPetugasPengaduan from "../_components/pengaduan/ModalTambahPetugasPengaduan/ModalTambahPetugasPengaduan";
 import ModalHapusPengaduan from "../_components/pengaduan/modal-hapus-pengaduan/ModalHapusPengaduan";
 import { fetchDataSertifikat } from "../_utils/data/dataSertifikat";
+import { useRouter } from "next/navigation";
 const sertifikat = () => {
   const dispatch = useDispatch<AppDispatch>();
   // Redux state
@@ -103,6 +104,14 @@ const sertifikat = () => {
     const uri = data[0].uri_pdf;
     window.open(uri);
   };
+
+  const router = useRouter();
+  useEffect(() => {
+    if (error && error.includes("Token tidak valid, otorisasi gagal")) {
+      // Adjust the condition based on your error message
+      router.push("/"); // Redirect to the home page
+    }
+  }, [error, router]);
 
   return (
     <div className="flex p-4 flex-col">

@@ -1,31 +1,35 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "./_store/store";
-import { setCookie } from "nookies";
-import { setToken } from "./_utils/data/dataAuth";
-
-// Define types for form values
-interface LoginFormValues {
-  username: string;
-  password: string;
-}
+import axios from "axios";
+import { signIn } from "next-auth/react";
+import { setUser } from "./_utils/data/dataAuth";
+import CryptoJS from "crypto-js";
+import { toast } from "react-toastify";
 
 const HomePage: React.FC = () => {
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const encryptPassword = (password: string) => {
+    const key = CryptoJS.enc.Utf8.parse(process.env.NEXT_PUBLIC_ENCRYPTION_KEY);
+    const encrypted = CryptoJS.AES.encrypt(password, key, {
+      mode: CryptoJS.mode.ECB,
+      padding: CryptoJS.pad.Pkcs7,
+    }).toString();
+    return encrypted;
+  };
+
   const validationSchema = Yup.object({
     username: Yup.string().required("Username Diperlukan"),
     password: Yup.string().required("Password Diperlukan"),
   });
 
-  const initialValues: LoginFormValues = {
+  const initialValues = {
     username: "",
     password: "",
   };
@@ -35,19 +39,28 @@ const HomePage: React.FC = () => {
     password: string;
   }) => {
     try {
-      const response = await axios.post("/api/auth/login", values);
-      const token = response.data.token;
+      setIsSubmitting(true);
+      const encryptedPassword = encryptPassword(values.password);
+      const result = await signIn("credentials", {
+        username: values.username,
+        password: encryptedPassword,
+        redirect: false,
+      });
 
-      // Store token in Redux
-      dispatch(setToken(token));
-
-      // Save token in cookies
-      setCookie(null, "token", token, { path: "/" });
-
-      // Redirect to the dashboard
-      router.push("/dashboard");
+      if (result?.ok) {
+        const { data } = await axios.get("/api/auth/session");
+        dispatch(setUser(data.user));
+        router.push("/dashboard");
+        toast.success("Login Berhasil");
+        setIsSubmitting(false);
+      } else {
+        setIsSubmitting(false);
+        toast.error(result?.error);
+      }
     } catch (error) {
-      console.error("Login failed", error);
+      setIsSubmitting(false);
+      console.error("Error during login:", error);
+      alert("Terjadi kesalahan. Coba lagi nanti.");
     }
   };
 
@@ -61,7 +74,7 @@ const HomePage: React.FC = () => {
           <div className="items-center justify-center flex lg:w-1/2">
             <img src="/logo.png" alt="Login" className="mb-4" />
           </div>
-          <div className="lg:w-1/2  ">
+          <div className="lg:w-1/2">
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
@@ -75,7 +88,7 @@ const HomePage: React.FC = () => {
                     </label>
                     <Field
                       name="username"
-                      type="username"
+                      type="text"
                       className="p-2 border border-gray-300 rounded-md w-full"
                     />
                     <ErrorMessage
@@ -103,10 +116,14 @@ const HomePage: React.FC = () => {
 
                   <button
                     type="submit"
-                    className="p-2 bg-green-500 text-white rounded-md w-full"
-                    onClick={() => router.push("/dashboard")}
+                    disabled={isSubmitting}
+                    className={`${
+                      isSubmitting
+                        ? "bg-gray-400"
+                        : "bg-green-500 hover:bg-green-600"
+                    } text-white font-semibold  rounded-md w-full py-2 px-4`}
                   >
-                    Login
+                    {isSubmitting ? "Processing..." : "Login"}
                   </button>
                 </Form>
               )}

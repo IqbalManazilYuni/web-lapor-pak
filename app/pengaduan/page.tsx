@@ -19,8 +19,10 @@ import { fetchDataPengaduan } from "../_utils/data/dataPengaduan";
 import { fetchDataUser } from "../_utils/data/dataUser";
 import ModalTambahPetugasPengaduan from "../_components/pengaduan/ModalTambahPetugasPengaduan/ModalTambahPetugasPengaduan";
 import ModalHapusPengaduan from "../_components/pengaduan/modal-hapus-pengaduan/ModalHapusPengaduan";
+import { useRouter } from "next/navigation";
 
 const pengaduan = () => {
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   // Redux state
   const {
@@ -28,6 +30,13 @@ const pengaduan = () => {
     loading,
     error,
   } = useSelector((state: RootState) => state.data2);
+
+  useEffect(() => {
+    if (error && error.includes("Token tidak valid, otorisasi gagal")) {
+      // Adjust the condition based on your error message
+      router.push("/"); // Redirect to the home page
+    }
+  }, [error, router]);
 
   const { items: dataListUser } = useSelector(
     (state: RootState) => state.data3

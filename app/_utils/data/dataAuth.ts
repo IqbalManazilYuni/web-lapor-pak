@@ -1,25 +1,35 @@
-import { AuthState } from '@/app/_store/jenisPengaduanModel';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: AuthState = {
+interface UserState {
+    token: string | null;
+    expiry: string | null;
+    pengguna: {
+        _id: string;
+        username: string;
+        name: string;
+        nomor_hp: string;
+        addres: string;
+        role: string;
+        uri_profle: string;
+    } | null;
+}
+
+const initialState: UserState = {
     token: null,
-    isAuthenticated: false,
+    expiry: null,
+    pengguna: null,
 };
 
-const authSlice = createSlice({
-    name: 'auth',
+const userSlice = createSlice({
+    name: 'user',
     initialState,
     reducers: {
-        setToken(state, action: PayloadAction<string>) {
-            state.token = action.payload;
-            state.isAuthenticated = true;
+        setUser: (state, action: PayloadAction<UserState>) => {
+            return { ...state, ...action.payload };
         },
-        logout(state) {
-            state.token = null;
-            state.isAuthenticated = false;
-        },
+        clearUser: () => initialState,
     },
 });
 
-export const { setToken, logout } = authSlice.actions;
-export default authSlice.reducer;
+export const { setUser, clearUser } = userSlice.actions;
+export default userSlice.reducer;

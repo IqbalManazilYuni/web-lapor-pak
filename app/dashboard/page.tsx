@@ -14,6 +14,8 @@ import { AppDispatch, RootState } from "../_store/store";
 import { fetchDataSummary } from "../_utils/data/dataSummary";
 import SkeletonLoading from "../_components/skeletonloading/SkeletonLoading";
 import ModalTambahSertifikat from "../_components/dashboard/modal-tambah-sertifikat/ModalTambahSertifikat";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const dashboard = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -99,6 +101,13 @@ const dashboard = () => {
       )
     );
   };
+  const router = useRouter();
+  useEffect(() => {
+    if (error && error.includes("Token tidak valid, otorisasi gagal")) {
+      // Adjust the condition based on your error message
+      router.push("/"); // Redirect to the home page
+    }
+  }, [error, router]);
 
   // Adjust the data for the current page
   const filteredData = filteredDataList();
