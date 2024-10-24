@@ -67,7 +67,7 @@ const ExpandableMenu = ({
 const SidebarComponent = () => {
   const dispatch = useDispatch();
   const pathname = usePathname();
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState<string | undefined>(undefined);
 
   const { data: session, status } = useSession();
 

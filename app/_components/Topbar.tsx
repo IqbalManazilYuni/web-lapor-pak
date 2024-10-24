@@ -63,7 +63,7 @@ const Topbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
   const pathname = usePathname();
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState<string | undefined>(undefined);
 
   const selectedMenuFromRedux = useSelector(
     (state: any) => state.menu.selectedMenu
