@@ -20,8 +20,6 @@ const dashboard = () => {
     error,
   } = useSelector((state: RootState) => state.data4);
 
-  const user = useSelector((state: RootState) => state.auth.pengguna);
-
   const [selectedYear, setSelectedYear] = useState<string | "">("");
   const [selectedMonth, setSelectedMonth] = useState<string | "">("");
   const [searchTerm, setSearchTerm] = useState<string>("");

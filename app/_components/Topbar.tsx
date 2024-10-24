@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSelectedMenu, loadSelectedMenu } from "../_utils/menu/menuSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faFolder, faUser } from "@fortawesome/free-solid-svg-icons";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
 const MenuItem = ({

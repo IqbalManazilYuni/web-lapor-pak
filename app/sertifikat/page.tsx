@@ -26,25 +26,25 @@ const sertifikat = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  const [currentDeleteIndex, setCurrentDeleteIndex] = useState<string | null>(
-    null
-  );
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  // const [currentDeleteIndex, setCurrentDeleteIndex] = useState<string | null>(
+  //   null
+  // );
+  // const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const handleSubmitDelete = () => {
-    handleCloseDeleteModal();
-  };
+  // const handleSubmitDelete = () => {
+  //   handleCloseDeleteModal();
+  // };
 
-  const handleOpenDeleteModal = (id: string) => {
-    const item = dataList.find((item) => item._id === id);
-    if (item) {
-      setCurrentDeleteIndex(id);
-      setIsDeleteModalOpen(true);
-    }
-  };
-  const handleCloseDeleteModal = () => {
-    setIsDeleteModalOpen(false);
-  };
+  // const handleOpenDeleteModal = (id: string) => {
+  //   const item = dataList.find((item) => item._id === id);
+  //   if (item) {
+  //     setCurrentDeleteIndex(id);
+  //     setIsDeleteModalOpen(true);
+  //   }
+  // };
+  // const handleCloseDeleteModal = () => {
+  //   setIsDeleteModalOpen(false);
+  // };
 
   useEffect(() => {
     dispatch(fetchDataSertifikat());
@@ -187,7 +187,7 @@ const sertifikat = () => {
                           </button>
                           <button
                             className="bg-red-100  w-24 h-8 rounded-2xl hover:bg-red-200 flex items-center justify-center my-2 xl:my-0"
-                            onClick={() => handleOpenDeleteModal(item._id)}
+                            // onClick={() => handleOpenDeleteModal(item._id)}
                           >
                             <FontAwesomeIcon
                               icon={faTrash} // Trash icon
