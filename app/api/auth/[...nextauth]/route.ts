@@ -2,8 +2,9 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
+import type { NextAuthOptions } from 'next-auth'; // Importing NextAuthOptions for type safety
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             name: 'Credentials',
@@ -41,15 +42,15 @@ export const authOptions = {
         }),
     ],
     session: {
-        strategy: 'jwt',
+        strategy: 'jwt' as const, // Ensure this is treated as a constant
     },
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
                 token.token = user.token;
                 token.role = user.pengguna.role;
-                token.expiry = user.expiry
-                token.pengguna = user.pengguna
+                token.expiry = user.expiry;
+                token.pengguna = user.pengguna;
             }
             return token;
         },
