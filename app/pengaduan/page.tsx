@@ -130,13 +130,13 @@ const pengaduan = () => {
     if (session?.user) {
       if (session.user.role === "admin") {
         filteredData = filteredData.filter(
-          (item) => item.kabupatenkota === session.user.pengguna.addres
+          (item) => item.kabupatenkota === session.user.pengguna?.addres
         );
       } else if (session.user.role === "petugas") {
         filteredData = filteredData.filter(
           (item) =>
-            item.kabupatenkota === session.user.pengguna.addres &&
-            item.petugas === session.user.pengguna.username
+            item.kabupatenkota === session?.user.pengguna?.addres &&
+            item.petugas === session?.user.pengguna.username
         );
       }
     }
@@ -311,7 +311,7 @@ const pengaduan = () => {
                               className="w-4 h-4 text-green-600"
                             />
                           </button>
-                          {session.user?.role !== "petugas" && (
+                          {session?.user?.role !== "petugas" && (
                             <button
                               className="bg-red-100 w-16 h-8 rounded-2xl hover:bg-red-200 flex items-center justify-center my-2 xl:my-0"
                               onClick={() => handleOpenDeleteModal(item._id)}

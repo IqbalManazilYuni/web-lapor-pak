@@ -35,9 +35,10 @@ export default function RootLayout({
       </head>
       <body className={`${Poppins.variable} antialiased bg-slate-100`}>
         <ReduxProvider store={store}>
-          <SessionProvider> {/* Wrap everything with SessionProvider */}
+          <SessionProvider>
+            {" "}
+            {/* Wrap everything with SessionProvider */}
             <ToastContainer />
-
             {pathname !== "/" ? (
               <>
                 <Topbar />

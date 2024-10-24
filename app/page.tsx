@@ -16,11 +16,18 @@ const HomePage: React.FC = () => {
   const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const encryptPassword = (password: string) => {
-    const key = CryptoJS.enc.Utf8.parse(process.env.NEXT_PUBLIC_ENCRYPTION_KEY);
+    const encryptionKey = process.env.NEXT_PUBLIC_ENCRYPTION_KEY;
+
+    if (!encryptionKey) {
+      throw new Error("Encryption key is missing in the environment variables");
+    }
+
+    const key = CryptoJS.enc.Utf8.parse(encryptionKey);
     const encrypted = CryptoJS.AES.encrypt(password, key, {
       mode: CryptoJS.mode.ECB,
       padding: CryptoJS.pad.Pkcs7,
     }).toString();
+
     return encrypted;
   };
 
@@ -67,7 +74,7 @@ const HomePage: React.FC = () => {
     } catch (error) {
       console.error("Error during login:", error);
       alert("Terjadi kesalahan. Coba lagi nanti.");
-    } 
+    }
   };
 
   return (

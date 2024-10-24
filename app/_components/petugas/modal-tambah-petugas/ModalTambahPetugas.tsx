@@ -15,8 +15,8 @@ interface ModalTambahPetugasProps {
   onClose: () => void;
   onSubmit: () => void;
   data: KabupatenKota[];
-  addresAdmin: string;
-  role: string;
+  addresAdmin?: string;
+  role?: string;
 }
 
 const ModalTambahPetugas: React.FC<ModalTambahPetugasProps> = ({

@@ -14,9 +14,9 @@ interface ModalTambahMasyarakatProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
-  addresAdmin: string;
+  addresAdmin?: string;
   data: KabupatenKota[];
-  role: string;
+  role?: string;
 }
 
 const ModalTambahMasyarakat: React.FC<ModalTambahMasyarakatProps> = ({

@@ -141,7 +141,7 @@ const petugas = () => {
     if (session?.user) {
       if (session.user.role === "admin") {
         filteredData = filteredData.filter(
-          (item) => item.addres === session.user.pengguna.addres
+          (item) => item.addres === session.user.pengguna?.addres
         );
       }
     }

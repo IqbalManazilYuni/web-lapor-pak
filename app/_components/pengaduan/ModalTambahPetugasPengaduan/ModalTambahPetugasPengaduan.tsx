@@ -22,7 +22,7 @@ interface ModalTambahPetugasPengaduanProps {
     petugas: string;
   };
   data: DataUser[];
-  role: string;
+  role?: string;
 }
 
 const ModalTambahPetugasPengaduan: React.FC<

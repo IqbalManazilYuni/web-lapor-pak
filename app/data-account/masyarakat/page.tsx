@@ -148,7 +148,7 @@ const masyarakat = () => {
     if (session?.user) {
       if (session.user.role === "admin") {
         filteredData = filteredData.filter(
-          (item) => item.addres === session.user.pengguna.addres
+          (item) => item.addres === session.user.pengguna?.addres
         );
       }
     }
@@ -333,7 +333,7 @@ const masyarakat = () => {
             onClose={handleCloseModal}
             onSubmit={handleSubmitTambah}
             data={dataListKK}
-            role={session?.user?.role}
+            role={session?.user.role}
             addresAdmin={session?.user?.pengguna?.addres}
           />
           {currentEditIndex !== null && (
@@ -342,7 +342,7 @@ const masyarakat = () => {
               onClose={handleCloseEditModal}
               onSubmit={handleSubmitEdit}
               data={dataListKK}
-              role={session?.user?.role}
+              role={session?.user.role}
               initialData={
                 dataList.find((item) => item._id === currentEditIndex)!
               }

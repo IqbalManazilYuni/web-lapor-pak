@@ -24,7 +24,7 @@ interface ModalEditPetugasProps {
     role: string;
   };
   data: KabupatenKota[];
-  role: string;
+  role?: string;
 }
 
 const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({

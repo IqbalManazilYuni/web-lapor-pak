@@ -23,7 +23,7 @@ interface ModalEditMasyarakatProps {
     name: string;
     role: string;
   };
-  role: string;
+  role?: string;
   data: KabupatenKota[];
 }
 
