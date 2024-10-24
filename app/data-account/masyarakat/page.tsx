@@ -25,7 +25,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 const masyarakat = () => {
   const dispatch = useDispatch<AppDispatch>();
-  // Redux state
   const {
     items: dataList,
     loading,
@@ -119,8 +118,7 @@ const masyarakat = () => {
   const router = useRouter();
   useEffect(() => {
     if (error && error.includes("Token tidak valid, otorisasi gagal")) {
-      // Adjust the condition based on your error message
-      router.push("/"); // Redirect to the home page
+      router.push("/");
     }
   }, [error, router]);
 

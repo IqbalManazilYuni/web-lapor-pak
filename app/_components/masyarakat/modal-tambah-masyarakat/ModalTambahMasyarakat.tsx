@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/_store/store";
 import axios from "axios";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
+import axiosInstance from "@/app/_utils/interceptor";
 
 interface ModalTambahMasyarakatProps {
   isOpen: boolean;
@@ -50,8 +51,8 @@ const ModalTambahMasyarakat: React.FC<ModalTambahMasyarakatProps> = ({
           onSubmit={async (values) => {
             setIsSubmitting(true);
             try {
-              const response = await axios.post(
-                "http://localhost:5000/api/pengguna/register",
+              const response = await axiosInstance.post(
+                "/pengguna/register",
                 values,
                 { headers: { "Content-Type": "application/json" } }
               );

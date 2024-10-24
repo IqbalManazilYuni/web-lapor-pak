@@ -9,6 +9,7 @@ import axios from "axios";
 import { KabupatenKota } from "@/app/_store/jenisPengaduanModel";
 import EachUtils from "@/app/_utils/EachUtils/EachUtils";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
+import axiosInstance from "@/app/_utils/interceptor";
 
 interface ModalTambahPetugasProps {
   isOpen: boolean;
@@ -33,7 +34,7 @@ const ModalTambahPetugas: React.FC<ModalTambahPetugasProps> = ({
     name: "",
     username: "",
     password: "",
-    role:"petugas",
+    role: "petugas",
   };
 
   const validationSchema = Yup.object({
@@ -54,8 +55,8 @@ const ModalTambahPetugas: React.FC<ModalTambahPetugasProps> = ({
           onSubmit={async (values) => {
             setIsSubmitting(true);
             try {
-              const response = await axios.post(
-                "http://localhost:5000/api/pengguna/register",
+              const response = await axiosInstance.post(
+                "/pengguna/register",
                 values,
                 { headers: { "Content-Type": "application/json" } }
               );

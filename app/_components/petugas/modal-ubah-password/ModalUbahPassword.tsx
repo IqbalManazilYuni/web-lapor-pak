@@ -8,6 +8,7 @@ import { AppDispatch } from "@/app/_store/store";
 import axios from "axios";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
 import { toast } from "react-toastify";
+import axiosInstance from "@/app/_utils/interceptor";
 
 interface ModalUbahPetugasProps {
   isOpen: boolean;
@@ -57,8 +58,8 @@ const ModalUbahPetugas: React.FC<ModalUbahPetugasProps> = ({
             }
             setIsSubmitting(true);
             try {
-              const response = await axios.put(
-                "http://localhost:5000/api/pengguna/edit-password",
+              const response = await axiosInstance.put(
+                "/pengguna/edit-password",
                 values,
                 { headers: { "Content-Type": "application/json" } }
               );

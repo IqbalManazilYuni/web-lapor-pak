@@ -4,9 +4,7 @@
 import {
   faImage,
   faList,
-  faMapMarkerAlt,
   faTrash,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
@@ -14,15 +12,10 @@ import EachUtils from "../_utils/EachUtils/EachUtils";
 import SkeletonLoading from "../_components/skeletonloading/SkeletonLoading";
 import { AppDispatch, RootState } from "../_store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDataPengaduan } from "../_utils/data/dataPengaduan";
-import { fetchDataUser } from "../_utils/data/dataUser";
-import ModalTambahPetugasPengaduan from "../_components/pengaduan/ModalTambahPetugasPengaduan/ModalTambahPetugasPengaduan";
-import ModalHapusPengaduan from "../_components/pengaduan/modal-hapus-pengaduan/ModalHapusPengaduan";
 import { fetchDataSertifikat } from "../_utils/data/dataSertifikat";
 import { useRouter } from "next/navigation";
 const sertifikat = () => {
   const dispatch = useDispatch<AppDispatch>();
-  // Redux state
   const {
     items: dataList,
     loading,
@@ -33,9 +26,6 @@ const sertifikat = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  const [currentKotaTambah, setCurrentKotaTambah] = useState<string | null>(
-    null
-  );
   const [currentDeleteIndex, setCurrentDeleteIndex] = useState<string | null>(
     null
   );
@@ -71,7 +61,7 @@ const sertifikat = () => {
       setDataListSearch(dataList);
     } else {
       const filterData = dataList.filter((item) =>
-        item.namaPelapor.toLowerCase().includes(searchText)
+        item.nama_pelapor.toLowerCase().includes(searchText)
       );
       setDataListSearch(filterData);
       setCurrentPage(1);
@@ -108,8 +98,7 @@ const sertifikat = () => {
   const router = useRouter();
   useEffect(() => {
     if (error && error.includes("Token tidak valid, otorisasi gagal")) {
-      // Adjust the condition based on your error message
-      router.push("/"); // Redirect to the home page
+      router.push("/");
     }
   }, [error, router]);
 

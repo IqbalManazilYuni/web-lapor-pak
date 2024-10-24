@@ -24,7 +24,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 const kabKota = () => {
   const dispatch = useDispatch<AppDispatch>();
-  // Redux state
   const {
     items: dataList,
     loading,
@@ -148,8 +147,7 @@ const kabKota = () => {
   const router = useRouter();
   useEffect(() => {
     if (error && error.includes("Token tidak valid, otorisasi gagal")) {
-      // Adjust the condition based on your error message
-      router.push("/"); // Redirect to the home page
+      router.push("/");
     }
   }, [error, router]);
 
@@ -158,6 +156,7 @@ const kabKota = () => {
       setCurrentPage((prev) => prev - 1);
     }
   };
+  
   return (
     <div className="flex p-4 flex-col">
       <div className="font-Poppins font-bold text-3xl">Data Account</div>

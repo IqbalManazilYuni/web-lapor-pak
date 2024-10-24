@@ -9,6 +9,7 @@ import axios from "axios";
 import { KabupatenKota } from "@/app/_store/jenisPengaduanModel";
 import EachUtils from "@/app/_utils/EachUtils/EachUtils";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
+import axiosInstance from "@/app/_utils/interceptor";
 
 interface ModalTambahAdminkabkotaProps {
   isOpen: boolean;
@@ -54,8 +55,8 @@ const ModalTambahAdminkabkota: React.FC<ModalTambahAdminkabkotaProps> = ({
           onSubmit={async (values) => {
             setIsSubmitting(true);
             try {
-              const response = await axios.post(
-                "http://localhost:5000/api/pengguna/register",
+              const response = await axiosInstance.post(
+                "/pengguna/register",
                 values,
                 { headers: { "Content-Type": "application/json" } }
               );

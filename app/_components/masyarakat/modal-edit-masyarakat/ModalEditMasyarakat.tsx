@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/_store/store";
 import axios from "axios";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
+import axiosInstance from "@/app/_utils/interceptor";
 
 interface ModalEditMasyarakatProps {
   isOpen: boolean;
@@ -51,8 +52,8 @@ const ModalEditMasyarakat: React.FC<ModalEditMasyarakatProps> = ({
           onSubmit={async (values) => {
             setIsSubmitting(true);
             try {
-              const response = await axios.put(
-                "http://localhost:5000/api/pengguna/edit-pengguna",
+              const response = await axiosInstance.put(
+                "/pengguna/edit-pengguna",
                 values,
                 { headers: { "Content-Type": "application/json" } }
               );

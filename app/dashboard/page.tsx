@@ -1,12 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
-import {
-  faEdit,
-  faList,
-  faPlus,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import { faList, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +10,6 @@ import { fetchDataSummary } from "../_utils/data/dataSummary";
 import SkeletonLoading from "../_components/skeletonloading/SkeletonLoading";
 import ModalTambahSertifikat from "../_components/dashboard/modal-tambah-sertifikat/ModalTambahSertifikat";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 
 const dashboard = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,6 +18,8 @@ const dashboard = () => {
     loading,
     error,
   } = useSelector((state: RootState) => state.data4);
+
+  const user = useSelector((state: RootState) => state.auth.pengguna);
 
   const [selectedYear, setSelectedYear] = useState<string | "">("");
   const [selectedMonth, setSelectedMonth] = useState<string | "">("");
@@ -48,7 +44,7 @@ const dashboard = () => {
     bulan: string,
     jumlahLaporan: string
   ) => {
-    setInitialData({ namaPelapor, tahun, bulan, jumlahLaporan }); // Set initial data
+    setInitialData({ namaPelapor, tahun, bulan, jumlahLaporan });
     setIsModalOpen(true);
   };
 
@@ -60,11 +56,6 @@ const dashboard = () => {
     dispatch(fetchDataSummary());
   }, [dispatch]);
 
-  useEffect(() => {
-    console.log(dataList);
-  }, [dataList]);
-
-  // Function to handle filtering
   const filteredDataList = () => {
     const searchTermLowerCase = searchTerm.toLowerCase();
 
@@ -85,7 +76,6 @@ const dashboard = () => {
         .filter((item) => item.bulan.length > 0);
     }
 
-    // Search by pelapor's name
     return filteredData.flatMap((item) =>
       item.bulan.flatMap((bulanItem) =>
         bulanItem.pelapor
@@ -104,18 +94,15 @@ const dashboard = () => {
   const router = useRouter();
   useEffect(() => {
     if (error && error.includes("Token tidak valid, otorisasi gagal")) {
-      // Adjust the condition based on your error message
-      router.push("/"); // Redirect to the home page
+      router.push("/");
     }
   }, [error, router]);
 
-  // Adjust the data for the current page
   const filteredData = filteredDataList();
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentDataList = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Calculate total pages based on filtered data length
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const handleNextPage = () => {
@@ -159,7 +146,7 @@ const dashboard = () => {
                   className="grow"
                   placeholder="Search Pelapor"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm state
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -221,7 +208,9 @@ const dashboard = () => {
                   <th>Bulan</th>
                   <th>Pelapor</th>
                   <th>Jumlah Laporan</th>
-                  <th className="flex justify-center">Action</th>
+                  {user && user.role !== "petugas" && (
+                    <th className="flex justify-center">Action</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -239,25 +228,27 @@ const dashboard = () => {
                       <td>{item.bulan}</td>
                       <td>{item.namaPelapor}</td>
                       <td>{item.jumlahLaporan}</td>
-                      <td className="flex justify-center">
-                        <button
-                          className="text-yellow-700 bg-yellow-200 w-48 h-8 rounded-2xl hover:bg-yellow-100 flex items-center justify-center"
-                          onClick={() =>
-                            handleOpenModal(
-                              item.namaPelapor,
-                              item.tahun,
-                              item.bulan,
-                              item.jumlahLaporan
-                            )
-                          }
-                        >
-                          <FontAwesomeIcon
-                            icon={faPlus}
-                            className="mr-2 h-4 w-4"
-                          />
-                          <span>Tambah Sertifikat</span>
-                        </button>
-                      </td>
+                      {user && user.role !== "petugas" && (
+                        <td className="flex justify-center">
+                          <button
+                            className="text-yellow-700 bg-yellow-200 w-48 h-8 rounded-2xl hover:bg-yellow-100 flex items-center justify-center"
+                            onClick={() =>
+                              handleOpenModal(
+                                item.namaPelapor,
+                                item.tahun,
+                                item.bulan,
+                                item.jumlahLaporan
+                              )
+                            }
+                          >
+                            <FontAwesomeIcon
+                              icon={faPlus}
+                              className="mr-2 h-4 w-4"
+                            />
+                            <span>Tambah Sertifikat</span>
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))
                 )}

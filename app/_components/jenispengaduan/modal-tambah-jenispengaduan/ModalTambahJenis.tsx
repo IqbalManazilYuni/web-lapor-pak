@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { fetchData } from "@/app/_utils/data/dataSlice";
 import { AppDispatch } from "@/app/_store/store";
 import axios from "axios";
+import axiosInstance from "@/app/_utils/interceptor";
 
 interface ModalTambahJenisProps {
   isOpen: boolean;
@@ -39,8 +40,8 @@ const ModalTambahJenis: React.FC<ModalTambahJenisProps> = ({
           onSubmit={async (values) => {
             setIsSubmitting(true);
             try {
-              const response = await axios.post(
-                "http://localhost:5000/api/jenispengaduan",
+              const response = await axiosInstance.post(
+                "/jenispengaduan",
                 values,
                 { headers: { "Content-Type": "application/json" } }
               );

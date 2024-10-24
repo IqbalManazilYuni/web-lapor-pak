@@ -6,6 +6,7 @@ import React, { ChangeEvent, useState } from "react";
 import { Formik, Form } from "formik";
 import axios from "axios";
 import { toast } from "react-toastify";
+import axiosInstance from "@/app/_utils/interceptor";
 
 interface ModalTambahSertifikatProps {
   isOpen: boolean;
@@ -43,8 +44,8 @@ const ModalTambahSertifikat: React.FC<ModalTambahSertifikatProps> = ({
       formData.append("jumlahLaporan", values.jumlahLaporan);
       if (selectedFile) formData.append("file", selectedFile);
 
-      const response = await axios.post(
-        "http://localhost:5000/api/sertifikat",
+      const response = await axiosInstance.post(
+        "/sertifikat",
         formData,
         {
           headers: {

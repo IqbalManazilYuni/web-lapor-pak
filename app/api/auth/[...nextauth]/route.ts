@@ -22,10 +22,8 @@ export const authOptions = {
                     }
                     return null;
                 } catch (error) {
-                    // Check if the error is an Axios error and log the relevant details
                     if (axios.isAxiosError(error)) {
                         if (error.response) {
-                            // The request was made and the server responded with a status code
                             console.log("Error status:", error.response.status);
                             console.log("Error data:", error.response.data);
                             throw new Error(error.response.data.message);
@@ -51,11 +49,14 @@ export const authOptions = {
                 token.token = user.token;
                 token.role = user.pengguna.role;
                 token.expiry = user.expiry
+                token.pengguna = user.pengguna
             }
             return token;
         },
         async session({ session, token }) {
-            session.user = token;
+            session.user = {
+                ...token,
+            };
             return session;
         },
     },

@@ -20,28 +20,29 @@ import { fetchDataUser } from "../_utils/data/dataUser";
 import ModalTambahPetugasPengaduan from "../_components/pengaduan/ModalTambahPetugasPengaduan/ModalTambahPetugasPengaduan";
 import ModalHapusPengaduan from "../_components/pengaduan/modal-hapus-pengaduan/ModalHapusPengaduan";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const pengaduan = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  // Redux state
   const {
     items: dataList,
     loading,
     error,
   } = useSelector((state: RootState) => state.data2);
 
+  const { data: session, status } = useSession();
+
   useEffect(() => {
     if (error && error.includes("Token tidak valid, otorisasi gagal")) {
-      // Adjust the condition based on your error message
-      router.push("/"); // Redirect to the home page
+      router.push("/");
     }
   }, [error, router]);
 
   const { items: dataListUser } = useSelector(
     (state: RootState) => state.data3
   );
-  const [dataListSearch, setDataListSearch] = useState(dataList);
+  const [dataListSearch, setDataListSearch] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const [isModalTambah, setIsModalTambah] = useState(false);
@@ -90,7 +91,6 @@ const pengaduan = () => {
     setCurrentKotaTambah(null);
   };
 
-  // Filtering user data based on kabupatenkota
   const filteredUserData = dataListUser.filter((user) =>
     user.addres?.toLowerCase().includes(currentKotaTambah?.toLowerCase() || "")
   );
@@ -101,8 +101,24 @@ const pengaduan = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setDataListSearch(dataList);
-  }, [dataList]);
+    if (status === "authenticated" && session?.user) {
+      let filteredData = [...dataList];
+      if (session.user?.role === "admin") {
+        filteredData = filteredData.filter(
+          (item) => item.kabupatenkota === session?.user?.pengguna?.addres
+        );
+      } else if (session.user?.role === "petugas") {
+        filteredData = filteredData.filter(
+          (item) =>
+            item.kabupatenkota === session?.user?.pengguna?.addres &&
+            item.petugas === session?.user?.pengguna?.username
+        );
+      } else if (session.user?.role === "super admin") {
+        setDataListSearch(dataList);
+      }
+      setDataListSearch(filteredData);
+    }
+  }, [session, status, dataList]);
 
   const handleSearch = (text: string) => {
     const searchText = text.toLowerCase();
@@ -263,7 +279,7 @@ const pengaduan = () => {
                             onClick={() => handleOpenMaps(item._id)}
                           >
                             <FontAwesomeIcon
-                              icon={faMapMarkerAlt} // Map marker icon
+                              icon={faMapMarkerAlt}
                               className="w-4 h-4 text-blue-600"
                             />
                           </button>
@@ -277,16 +293,17 @@ const pengaduan = () => {
                               className="w-4 h-4 text-green-600"
                             />
                           </button>
-
-                          <button
-                            className="bg-red-100 w-16 h-8 rounded-2xl hover:bg-red-200 flex items-center justify-center my-2 xl:my-0"
-                            onClick={() => handleOpenDeleteModal(item._id)}
-                          >
-                            <FontAwesomeIcon
-                              icon={faTrash} // Trash icon
-                              className="w-4 h-4 text-red-600"
-                            />
-                          </button>
+                          {session.user?.role !== "petugas" && (
+                            <button
+                              className="bg-red-100 w-16 h-8 rounded-2xl hover:bg-red-200 flex items-center justify-center my-2 xl:my-0"
+                              onClick={() => handleOpenDeleteModal(item._id)}
+                            >
+                              <FontAwesomeIcon
+                                icon={faTrash}
+                                className="w-4 h-4 text-red-600"
+                              />
+                            </button>
+                          )}
                         </td>
                       </tr>
                     )}

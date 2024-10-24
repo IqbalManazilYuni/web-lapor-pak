@@ -11,6 +11,7 @@ import axios from "axios";
 import { DataUser } from "@/app/_store/jenisPengaduanModel";
 import EachUtils from "@/app/_utils/EachUtils/EachUtils";
 import { fetchDataPengaduan } from "@/app/_utils/data/dataPengaduan";
+import axiosInstance from "@/app/_utils/interceptor";
 
 interface ModalTambahPetugasPengaduanProps {
   isOpen: boolean;
@@ -48,8 +49,8 @@ const ModalTambahPetugasPengaduan: React.FC<
           onSubmit={async (values) => {
             setIsSubmitting(true);
             try {
-              const response = await axios.put(
-                "http://localhost:5000/api/pengaduan/petugas",
+              const response = await axiosInstance.put(
+                "/pengaduan/petugas",
                 values,
                 { headers: { "Content-Type": "application/json" } }
               );

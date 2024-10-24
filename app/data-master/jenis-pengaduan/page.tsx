@@ -21,7 +21,6 @@ import { useRouter } from "next/navigation";
 
 const jenisPengaduan = () => {
   const dispatch = useDispatch<AppDispatch>();
-  // Redux state
   const {
     items: dataList,
     loading,
@@ -63,7 +62,7 @@ const jenisPengaduan = () => {
   const handleOpenEditModal = (id: string) => {
     const item = dataList.find((item) => item._id === id);
     if (item) {
-      setCurrentEditIndex(id); // Set id instead of index
+      setCurrentEditIndex(id);
       setIsEditModalOpen(true);
     }
   };
@@ -106,8 +105,7 @@ const jenisPengaduan = () => {
   const router = useRouter();
   useEffect(() => {
     if (error && error.includes("Token tidak valid, otorisasi gagal")) {
-      // Adjust the condition based on your error message
-      router.push("/"); // Redirect to the home page
+      router.push("/");
     }
   }, [error, router]);
 

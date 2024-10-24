@@ -2,6 +2,7 @@
 
 import { AppDispatch } from "@/app/_store/store";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
+import axiosInstance from "@/app/_utils/interceptor";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -22,8 +23,8 @@ const ModalHapusMasyarakat: React.FC<ModalHapusMasyarakatProps> = ({
 
   const hapusData = async () => {
     try {
-      const response = await axios.delete(
-        `http://localhost:5000/api/pengguna/delete-pengguna/${initialData._id}`,
+      const response = await axiosInstance.delete(
+        `/pengguna/delete-pengguna/${initialData._id}`,
         { headers: { "Content-Type": "application/json" } }
       );
       if (response.status !== 200)

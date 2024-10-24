@@ -63,7 +63,7 @@ const kabupatenKota = () => {
   const handleOpenEditModal = (id: string) => {
     const item = dataList.find((item) => item._id === id);
     if (item) {
-      setCurrentEditIndex(id); // Set id instead of index
+      setCurrentEditIndex(id);
       setIsEditModalOpen(true);
     }
   };
@@ -125,8 +125,7 @@ const kabupatenKota = () => {
   const router = useRouter();
   useEffect(() => {
     if (error && error.includes("Token tidak valid, otorisasi gagal")) {
-      // Adjust the condition based on your error message
-      router.push("/"); // Redirect to the home page
+      router.push("/");
     }
   }, [error, router]);
   return (

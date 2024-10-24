@@ -2,6 +2,7 @@
 
 import { AppDispatch } from "@/app/_store/store";
 import { fetchDataPengaduan } from "@/app/_utils/data/dataPengaduan";
+import axiosInstance from "@/app/_utils/interceptor";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -22,8 +23,8 @@ const ModalHapusPengaduan: React.FC<ModalHapusPengaduanProps> = ({
 
   const hapusData = async () => {
     try {
-      const response = await axios.delete(
-        `http://localhost:5000/api/pengaduan/hapus-pengaduan/${initialData._id}`,
+      const response = await axiosInstance.delete(
+        `/pengaduan/hapus-pengaduan/${initialData._id}`,
         { headers: { "Content-Type": "application/json" } }
       );
       console.log(response);

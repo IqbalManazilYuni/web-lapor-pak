@@ -10,6 +10,7 @@ import axios from "axios";
 import EachUtils from "@/app/_utils/EachUtils/EachUtils";
 import { KabupatenKota } from "@/app/_store/jenisPengaduanModel";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
+import axiosInstance from "@/app/_utils/interceptor";
 
 interface ModalEditAdminkabkotaProps {
   isOpen: boolean;
@@ -55,8 +56,8 @@ const ModalEditAdminkabkota: React.FC<ModalEditAdminkabkotaProps> = ({
           onSubmit={async (values) => {
             setIsSubmitting(true);
             try {
-              const response = await axios.put(
-                "http://localhost:5000/api/pengguna/edit-pengguna",
+              const response = await axiosInstance.put(
+                "/pengguna/edit-pengguna",
                 values,
                 { headers: { "Content-Type": "application/json" } }
               );

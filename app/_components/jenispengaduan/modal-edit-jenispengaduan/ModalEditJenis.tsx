@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/_store/store";
 import axios from "axios";
 import { fetchData } from "@/app/_utils/data/dataSlice";
+import axiosInstance from "@/app/_utils/interceptor";
 
 interface ModalEditJenisProps {
   isOpen: boolean;
@@ -41,8 +42,8 @@ const ModalEditJenis: React.FC<ModalEditJenisProps> = ({
           onSubmit={async (values) => {
             setIsSubmitting(true);
             try {
-              const response = await axios.put(
-                "http://localhost:5000/api/jenispengaduan",
+              const response = await axiosInstance.put(
+                "/jenispengaduan",
                 values,
                 { headers: { "Content-Type": "application/json" } }
               );

@@ -15,8 +15,6 @@ axiosInstance.interceptors.request.use(
         return config;
     },
     (error) => {
-        console.log("ayam",error);
-        
         return Promise.reject(error);
     }
 );

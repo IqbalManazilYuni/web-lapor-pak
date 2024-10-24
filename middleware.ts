@@ -8,13 +8,15 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/', req.url));
     }
     const role = token.role;
+    console.log("ayam",role);
+    
     const expiry = token.expiry;
     const currentTime = new Date().getTime();
-
+    console.log(expiry);
+    
     const currentDate = new Date(currentTime);
     const expiryDate = new Date(expiry * 1000);
     if (currentDate > expiryDate) {
-        // Clear cookies
         const response = NextResponse.redirect(new URL('/', req.url));
         response.cookies.set('next-auth.session-token', '', { path: '/' });
         response.cookies.set('next-auth.csrf-token', '', { path: '/' });

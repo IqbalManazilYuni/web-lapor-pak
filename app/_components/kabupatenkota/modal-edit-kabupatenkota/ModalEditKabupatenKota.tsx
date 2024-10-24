@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/_store/store";
 import axios from "axios";
 import { fetchDataKK } from "@/app/_utils/data/dataSliceKK";
+import axiosInstance from "@/app/_utils/interceptor";
 
 interface ModalEditKabupatenKotaProps {
   isOpen: boolean;
@@ -41,8 +42,8 @@ const ModalEditKabupatenKota: React.FC<ModalEditKabupatenKotaProps> = ({
           onSubmit={async (values) => {
             setIsSubmitting(true);
             try {
-              const response = await axios.put(
-                "http://localhost:5000/api/kabupatenkota",
+              const response = await axiosInstance.put(
+                "/kabupatenkota",
                 values,
                 { headers: { "Content-Type": "application/json" } }
               );

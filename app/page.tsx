@@ -34,10 +34,7 @@ const HomePage: React.FC = () => {
     password: "",
   };
 
-  const handleSubmit = async (values: {
-    username: string;
-    password: string;
-  }) => {
+  const handleSubmit = async (values: { username: string; password: string }) => {
     try {
       setIsSubmitting(true);
       const encryptedPassword = encryptPassword(values.password);
@@ -46,21 +43,26 @@ const HomePage: React.FC = () => {
         password: encryptedPassword,
         redirect: false,
       });
-
+  
       if (result?.ok) {
         const { data } = await axios.get("/api/auth/session");
-        dispatch(setUser(data.user));
-        router.push("/dashboard");
-        toast.success("Login Berhasil");
-        setIsSubmitting(false);
+        if (data) {
+          dispatch(setUser({
+            token: data.user.token,
+            pengguna: data.user.pengguna,
+          }));
+          console.log("User data:", data.user);
+          router.push("/dashboard");
+          toast.success("Login Berhasil");
+        }
       } else {
-        setIsSubmitting(false);
         toast.error(result?.error);
       }
     } catch (error) {
-      setIsSubmitting(false);
       console.error("Error during login:", error);
       alert("Terjadi kesalahan. Coba lagi nanti.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

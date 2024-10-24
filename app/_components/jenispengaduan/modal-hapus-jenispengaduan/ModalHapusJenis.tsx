@@ -2,6 +2,7 @@
 
 import { AppDispatch } from "@/app/_store/store";
 import { fetchData } from "@/app/_utils/data/dataSlice";
+import axiosInstance from "@/app/_utils/interceptor";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 
@@ -21,8 +22,8 @@ const ModalHapusJenis: React.FC<ModalHapusJenisProps> = ({
 
   const hapusData = async () => {
     try {
-      const response = await axios.delete(
-        `http://localhost:5000/api/jenispengaduan/${initialData._id}`,
+      const response = await axiosInstance.delete(
+        `/jenispengaduan/${initialData._id}`,
         { headers: { "Content-Type": "application/json" } }
       );
       console.log(response);
