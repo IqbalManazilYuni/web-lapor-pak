@@ -3,7 +3,6 @@
 import { AppDispatch } from "@/app/_store/store";
 import { fetchDataPengaduan } from "@/app/_utils/data/dataPengaduan";
 import axiosInstance from "@/app/_utils/interceptor";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 

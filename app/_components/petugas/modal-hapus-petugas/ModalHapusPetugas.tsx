@@ -3,7 +3,6 @@
 import { AppDispatch } from "@/app/_store/store";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
 import axiosInstance from "@/app/_utils/interceptor";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 
 interface ModalHapusPetugasProps {

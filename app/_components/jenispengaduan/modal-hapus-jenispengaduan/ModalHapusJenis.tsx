@@ -3,7 +3,6 @@
 import { AppDispatch } from "@/app/_store/store";
 import { fetchData } from "@/app/_utils/data/dataSlice";
 import axiosInstance from "@/app/_utils/interceptor";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 
 interface ModalHapusJenisProps {

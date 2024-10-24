@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useEffect, useState, useCallback, memo } from "react";
@@ -14,8 +15,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { RootState } from "../_store/store";
-import { setUser } from "../_utils/data/dataAuth";
 import { useSession } from "next-auth/react";
 
 const MenuItem = ({

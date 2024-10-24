@@ -6,7 +6,6 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/_store/store";
-import axios from "axios";
 import { fetchDataKK } from "@/app/_utils/data/dataSliceKK";
 import axiosInstance from "@/app/_utils/interceptor";
 

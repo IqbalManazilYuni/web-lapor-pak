@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
@@ -62,7 +63,6 @@ const Topbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
   const pathname = usePathname();
-  const router = useRouter(); // Untuk navigasi halaman
   const [role, setRole] = useState("");
 
   const selectedMenuFromRedux = useSelector(

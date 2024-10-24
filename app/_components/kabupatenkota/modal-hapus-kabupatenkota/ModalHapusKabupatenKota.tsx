@@ -3,7 +3,6 @@
 import { AppDispatch } from "@/app/_store/store";
 import { fetchDataKK } from "@/app/_utils/data/dataSliceKK";
 import axiosInstance from "@/app/_utils/interceptor";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 
 interface ModalHapusKabupatenKotoProps {

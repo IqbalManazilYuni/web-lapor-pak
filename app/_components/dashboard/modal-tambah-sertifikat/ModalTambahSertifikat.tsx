@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/rules-of-hooks */
 
 "use client";
 
 import React, { ChangeEvent, useState } from "react";
 import { Formik, Form } from "formik";
-import axios from "axios";
 import { toast } from "react-toastify";
 import axiosInstance from "@/app/_utils/interceptor";
 
