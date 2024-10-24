@@ -23,11 +23,12 @@ interface ModalTambahPetugasPengaduanProps {
     petugas: string;
   };
   data: DataUser[];
+  role: string;
 }
 
 const ModalTambahPetugasPengaduan: React.FC<
   ModalTambahPetugasPengaduanProps
-> = ({ isOpen, onClose, initialData, data }) => {
+> = ({ isOpen, onClose, initialData, data, role }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,33 +69,36 @@ const ModalTambahPetugasPengaduan: React.FC<
         >
           {() => (
             <Form>
-              <div className="mb-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Nama Petugas:
-                </label>
-                <Field
-                  as="select"
-                  name="petugas"
-                  className="select select-bordered block w-full rounded-md mt-1 border-gray-300 p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="" disabled>
-                    Pilih Petugas
-                  </option>
-                  <EachUtils
-                    of={data}
-                    render={(item, index) => (
-                      <option key={index} value={item.username}>
-                        {item.username}
-                      </option>
-                    )}
+              {role !== "petugas" && (
+                <div className="mb-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Nama Petugas:
+                  </label>
+                  <Field
+                    as="select"
+                    name="petugas"
+                    className="select select-bordered block w-full rounded-md mt-1 border-gray-300 p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="" disabled>
+                      Pilih Petugas
+                    </option>
+                    <EachUtils
+                      of={data}
+                      render={(item, index) => (
+                        <option key={index} value={item.username}>
+                          {item.username}
+                        </option>
+                      )}
+                    />
+                  </Field>
+                  <ErrorMessage
+                    name="petugas"
+                    component="div"
+                    className="text-red-500 text-sm"
                   />
-                </Field>
-                <ErrorMessage
-                  name="petugas"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
+                </div>
+              )}
+
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
                   Status Pengaduan

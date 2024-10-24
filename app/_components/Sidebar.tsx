@@ -156,7 +156,7 @@ const SidebarComponent = () => {
             {(role === "admin" || role === "super admin") && (
               <li>
                 <ExpandableMenu label="Data Account" icon={faUser}>
-                  {session.user?.role === "super admin" && (
+                  {session?.user?.role === "super admin" && (
                     <MemoizedMenuItem
                       href="/data-account/kab-kota"
                       label="Admin Kab/Kota"

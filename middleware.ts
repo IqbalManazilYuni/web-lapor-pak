@@ -8,19 +8,16 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/', req.url));
     }
     const role = token.role;
-    console.log("ayam",role);
-    
     const expiry = token.expiry;
     const currentTime = new Date().getTime();
-    console.log(expiry);
-    
     const currentDate = new Date(currentTime);
     const expiryDate = new Date(expiry * 1000);
     if (currentDate > expiryDate) {
         const response = NextResponse.redirect(new URL('/', req.url));
-        response.cookies.set('next-auth.session-token', '', { path: '/' });
-        response.cookies.set('next-auth.csrf-token', '', { path: '/' });
-        response.cookies.set('next-auth.callback-url', '', { path: '/' });
+        ['next-auth.session-token', 'next-auth.csrf-token', 'next-auth.callback-url'].forEach(cookie => {
+            response.cookies.set(cookie, '', { path: '/', maxAge: 0 });
+        });
+
         return response;
     }
 

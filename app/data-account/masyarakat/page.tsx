@@ -19,6 +19,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,9 +31,10 @@ const masyarakat = () => {
     loading,
     error,
   } = useSelector((state: RootState) => state.data3);
-
+  const { items: dataListKK } = useSelector((state: RootState) => state.data1);
   const [dataListSearch, setDataListSearch] = useState(dataList);
   const [currentPage, setCurrentPage] = useState(1);
+  const [dataListdata, setDataList] = useState<any[]>([]);
   const itemsPerPage = 8;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUbahModalOpen, setIsUbahModalOpen] = useState(false);
@@ -43,6 +45,8 @@ const masyarakat = () => {
   const [currentDeleteIndex, setCurrentDeleteIndex] = useState<string | null>(
     null
   );
+
+  const { data: session, status } = useSession();
 
   const handleSubmitTambah = () => {
     handleCloseModal();
@@ -111,6 +115,20 @@ const masyarakat = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      let filteredData = [...dataListSearch];
+      if (session.user?.role === "admin") {
+        filteredData = filteredData.filter(
+          (item) => item.addres === session?.user?.pengguna?.addres
+        );
+      } else if (session.user?.role === "super admin") {
+        setDataList(dataListSearch);
+      }
+      setDataList(filteredData);
+    }
+  }, [dataListSearch, session, status]);
+
+  useEffect(() => {
     const data = dataList.filter((item) => item.role === "masyarakat");
     setDataListSearch(data);
   }, [dataList]);
@@ -124,29 +142,32 @@ const masyarakat = () => {
 
   const handleSearch = (text: string) => {
     const searchText = text.toLowerCase();
+    let filteredData = [...dataListSearch];
+
+    if (session?.user) {
+      if (session.user.role === "admin") {
+        filteredData = filteredData.filter(
+          (item) => item.addres === session.user.pengguna.addres
+        );
+      }
+    }
 
     if (searchText === "") {
-      const filteredData = dataList.filter(
-        (item) => item.role === "masyarakat"
-      );
-      setDataListSearch(filteredData);
+      setDataList(filteredData);
     } else {
-      const filterData = dataList
-        .filter((item) => item.role === "masyarakat")
-        .filter((item) => item.username.toLowerCase().includes(searchText));
-      setDataListSearch(filterData);
-      setCurrentPage(1);
+      const filterBySearch = filteredData.filter((item) =>
+        item.username.toLowerCase().includes(searchText)
+      );
+      setDataList(filterBySearch);
     }
+    setCurrentPage(1);
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentDataList = dataListSearch.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
+  const currentDataList = dataListdata.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(dataListSearch.length / itemsPerPage);
+  const totalPages = Math.ceil(dataListdata.length / itemsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -310,12 +331,17 @@ const masyarakat = () => {
             isOpen={isModalOpen}
             onClose={handleCloseModal}
             onSubmit={handleSubmitTambah}
+            data={dataListKK}
+            role={session?.user?.role}
+            addresAdmin={session?.user?.pengguna?.addres}
           />
           {currentEditIndex !== null && (
             <ModalEditMasyarakat
               isOpen={isEditModalOpen}
               onClose={handleCloseEditModal}
               onSubmit={handleSubmitEdit}
+              data={dataListKK}
+              role={session?.user?.role}
               initialData={
                 dataList.find((item) => item._id === currentEditIndex)!
               }

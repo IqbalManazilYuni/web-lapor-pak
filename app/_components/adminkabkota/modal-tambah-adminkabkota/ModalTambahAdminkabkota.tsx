@@ -40,7 +40,7 @@ const ModalTambahAdminkabkota: React.FC<ModalTambahAdminkabkotaProps> = ({
   const validationSchema = Yup.object({
     password: Yup.string().required("Password harus diisi"),
     addres: Yup.string().required("Kabupaten atau Kota harus diisi"),
-    nomor_hp: Yup.string().required("Kontak Admin harus diisi"),
+    nomor_hp: Yup.number().required("Kontak Admin harus diisi"),
     name: Yup.string().required("Nama Admin harus diisi"),
     username: Yup.string().required("USername Admin harus diisi"),
   });

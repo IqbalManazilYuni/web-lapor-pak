@@ -19,6 +19,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +34,7 @@ const petugas = () => {
   const { items: dataListKK } = useSelector((state: RootState) => state.data1);
 
   const [dataListSearch, setDataListSearch] = useState(dataList);
+  const [dataListdata, setDataList] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,6 +46,8 @@ const petugas = () => {
   const [currentDeleteIndex, setCurrentDeleteIndex] = useState<string | null>(
     null
   );
+
+  const { data: session, status } = useSession();
 
   const handleSubmitTambah = () => {
     handleCloseModal();
@@ -111,31 +115,50 @@ const petugas = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      let filteredData = [...dataListSearch];
+      if (session.user?.role === "admin") {
+        filteredData = filteredData.filter(
+          (item) => item.addres === session?.user?.pengguna?.addres
+        );
+      } else if (session.user?.role === "super admin") {
+        setDataList(dataListSearch);
+      }
+      setDataList(filteredData);
+    }
+  }, [dataListSearch, session, status]);
+
+  useEffect(() => {
     const data = dataList.filter((item) => item.role === "petugas");
     setDataListSearch(data);
   }, [dataList]);
 
   const handleSearch = (text: string) => {
     const searchText = text.toLowerCase();
+    let filteredData = [...dataListSearch];
+
+    if (session?.user) {
+      if (session.user.role === "admin") {
+        filteredData = filteredData.filter(
+          (item) => item.addres === session.user.pengguna.addres
+        );
+      }
+    }
 
     if (searchText === "") {
-      const filteredData = dataList.filter((item) => item.role === "petugas");
-      setDataListSearch(filteredData);
+      setDataList(filteredData);
     } else {
-      const filterData = dataList
-        .filter((item) => item.role === "petugas")
-        .filter((item) => item.username.toLowerCase().includes(searchText));
-      setDataListSearch(filterData);
-      setCurrentPage(1);
+      const filterBySearch = filteredData.filter((item) =>
+        item.username.toLowerCase().includes(searchText)
+      );
+      setDataList(filterBySearch);
     }
+    setCurrentPage(1);
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentDataList = dataListSearch.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
+  const currentDataList = dataListdata.slice(indexOfFirstItem, indexOfLastItem);
 
   const router = useRouter();
   useEffect(() => {
@@ -144,7 +167,7 @@ const petugas = () => {
     }
   }, [error, router]);
 
-  const totalPages = Math.ceil(dataListSearch.length / itemsPerPage);
+  const totalPages = Math.ceil(dataListdata.length / itemsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -307,6 +330,8 @@ const petugas = () => {
             onClose={handleCloseModal}
             onSubmit={handleSubmitTambah}
             data={dataListKK}
+            role={session?.user?.role}
+            addresAdmin={session?.user?.pengguna?.addres}
           />
           {currentUbahIndex !== null && (
             <ModalUbahPetugas
@@ -336,6 +361,7 @@ const petugas = () => {
               onClose={handleCloseEditModal}
               onSubmit={handleSubmitEdit}
               data={dataListKK}
+              role={session?.user?.role}
               initialData={
                 dataList.find((item) => item._id === currentEditIndex)!
               }

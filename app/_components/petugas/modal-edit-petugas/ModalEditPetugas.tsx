@@ -25,6 +25,7 @@ interface ModalEditPetugasProps {
     role: string;
   };
   data: KabupatenKota[];
+  role: string;
 }
 
 const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
@@ -32,6 +33,7 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
   onClose,
   initialData,
   data,
+  role,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -106,31 +108,32 @@ const ModalEditPetugas: React.FC<ModalEditPetugasProps> = ({
                     className="text-red-500 text-sm"
                   />
                 </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Kabupaten Atau Kota Petugas:
-                  </label>
-                  <Field
-                    as="select"
-                    name="addres"
-                    className="select select-bordered block w-full rounded-md mt-1 border-gray-300 p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <EachUtils
-                      of={data}
-                      render={(item, index) => (
-                        <option key={index} value={item.kabupatenkota}>
-                          {item.kabupatenkota}
-                        </option>
-                      )}
+                {role === "super admin" && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Kabupaten Atau Kota Petugas:
+                    </label>
+                    <Field
+                      as="select"
+                      name="addres"
+                      className="select select-bordered block w-full rounded-md mt-1 border-gray-300 p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <EachUtils
+                        of={data}
+                        render={(item, index) => (
+                          <option key={index} value={item.kabupatenkota}>
+                            {item.kabupatenkota}
+                          </option>
+                        )}
+                      />
+                    </Field>
+                    <ErrorMessage
+                      name="addres"
+                      component="div"
+                      className="text-red-500 text-sm"
                     />
-                  </Field>
-                  <ErrorMessage
-                    name="addres"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
+                  </div>
+                )}
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
                     Kontak Petugas:

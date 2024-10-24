@@ -10,6 +10,7 @@ import { fetchDataSummary } from "../_utils/data/dataSummary";
 import SkeletonLoading from "../_components/skeletonloading/SkeletonLoading";
 import ModalTambahSertifikat from "../_components/dashboard/modal-tambah-sertifikat/ModalTambahSertifikat";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const dashboard = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,6 +34,15 @@ const dashboard = () => {
     bulan: "",
     jumlahLaporan: "",
   });
+  const [role, setRole] = useState("");
+
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      setRole(session.user?.role);
+    }
+  }, [session, status]);
 
   const handleSubmitTambah = () => {
     handleCloseModal();
@@ -208,7 +218,7 @@ const dashboard = () => {
                   <th>Bulan</th>
                   <th>Pelapor</th>
                   <th>Jumlah Laporan</th>
-                  {user && user.role !== "petugas" && (
+                  {role === "super admin" && (
                     <th className="flex justify-center">Action</th>
                   )}
                 </tr>
@@ -228,7 +238,7 @@ const dashboard = () => {
                       <td>{item.bulan}</td>
                       <td>{item.namaPelapor}</td>
                       <td>{item.jumlahLaporan}</td>
-                      {user && user.role !== "petugas" && (
+                      {role === "super admin" && (
                         <td className="flex justify-center">
                           <button
                             className="text-yellow-700 bg-yellow-200 w-48 h-8 rounded-2xl hover:bg-yellow-100 flex items-center justify-center"

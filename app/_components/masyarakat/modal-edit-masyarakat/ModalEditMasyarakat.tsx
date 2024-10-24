@@ -9,6 +9,8 @@ import { AppDispatch } from "@/app/_store/store";
 import axios from "axios";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
 import axiosInstance from "@/app/_utils/interceptor";
+import { KabupatenKota } from "@/app/_store/jenisPengaduanModel";
+import EachUtils from "@/app/_utils/EachUtils/EachUtils";
 
 interface ModalEditMasyarakatProps {
   isOpen: boolean;
@@ -22,12 +24,16 @@ interface ModalEditMasyarakatProps {
     name: string;
     role: string;
   };
+  role: string;
+  data: KabupatenKota[];
 }
 
 const ModalEditMasyarakat: React.FC<ModalEditMasyarakatProps> = ({
   isOpen,
   onClose,
   initialData,
+  role,
+  data,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -102,21 +108,32 @@ const ModalEditMasyarakat: React.FC<ModalEditMasyarakatProps> = ({
                     className="text-red-500 text-sm"
                   />
                 </div>
-                <div className="mb-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Nama Masyarakat:
-                  </label>
-                  <Field
-                    type="addres"
-                    name="addres"
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 h-12"
-                  />
-                  <ErrorMessage
-                    name="addres"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
+                {role === "super admin" && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Kabupaten Atau Kota Masyarakat:
+                    </label>
+                    <Field
+                      as="select"
+                      name="addres"
+                      className="select select-bordered block w-full rounded-md mt-1 border-gray-300 p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <EachUtils
+                        of={data}
+                        render={(item, index) => (
+                          <option key={index} value={item.kabupatenkota}>
+                            {item.kabupatenkota}
+                          </option>
+                        )}
+                      />
+                    </Field>
+                    <ErrorMessage
+                      name="addres"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+                )}
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
                     Kontak Masyarakat:

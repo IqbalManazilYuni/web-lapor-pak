@@ -16,12 +16,16 @@ interface ModalTambahPetugasProps {
   onClose: () => void;
   onSubmit: () => void;
   data: KabupatenKota[];
+  addresAdmin: string;
+  role: string;
 }
 
 const ModalTambahPetugas: React.FC<ModalTambahPetugasProps> = ({
   isOpen,
   onClose,
   data,
+  addresAdmin,
+  role,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -29,7 +33,7 @@ const ModalTambahPetugas: React.FC<ModalTambahPetugasProps> = ({
   if (!isOpen) return null;
 
   const initialValues = {
-    addres: "",
+    addres: role === "admin" ? addresAdmin : "",
     nomor_hp: "",
     name: "",
     username: "",
@@ -40,7 +44,7 @@ const ModalTambahPetugas: React.FC<ModalTambahPetugasProps> = ({
   const validationSchema = Yup.object({
     password: Yup.string().required("Password harus diisi"),
     addres: Yup.string().required("Kabupaten atau Kota harus diisi"),
-    nomor_hp: Yup.string().required("Kontak Petugas harus diisi"),
+    nomor_hp: Yup.number().required("Kontak Petugas harus diisi"),
     name: Yup.string().required("Nama Petugas harus diisi"),
     username: Yup.string().required("USername Petugas harus diisi"),
   });
@@ -123,36 +127,37 @@ const ModalTambahPetugas: React.FC<ModalTambahPetugasProps> = ({
                     className="text-red-500 text-sm"
                   />
                 </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Kabupaten Atau Kota Petugas:
-                  </label>
-                  <Field
-                    as="select"
-                    name="addres"
-                    value={values.addres}
-                    onChange={handleChange}
-                    className="select select-bordered block w-full rounded-md mt-1 border-gray-300 p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="" disabled>
-                      Pilih Kabupaten / Kota
-                    </option>
-                    <EachUtils
-                      of={data}
-                      render={(item, index) => (
-                        <option key={index} value={item.kabupatenkota}>
-                          {item.kabupatenkota}
-                        </option>
-                      )}
+                {role === "super admin" && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Kabupaten Atau Kota Petugas:
+                    </label>
+                    <Field
+                      as="select"
+                      name="addres"
+                      value={values.addres}
+                      onChange={handleChange}
+                      className="select select-bordered block w-full rounded-md mt-1 border-gray-300 p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="" disabled>
+                        Pilih Kabupaten / Kota
+                      </option>
+                      <EachUtils
+                        of={data}
+                        render={(item, index) => (
+                          <option key={index} value={item.kabupatenkota}>
+                            {item.kabupatenkota}
+                          </option>
+                        )}
+                      />
+                    </Field>
+                    <ErrorMessage
+                      name="addres"
+                      component="div"
+                      className="text-red-500 text-sm"
                     />
-                  </Field>
-                  <ErrorMessage
-                    name="addres"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
+                  </div>
+                )}
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
                     Kontak Petugas:

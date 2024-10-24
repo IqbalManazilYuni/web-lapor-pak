@@ -91,8 +91,10 @@ const pengaduan = () => {
     setCurrentKotaTambah(null);
   };
 
-  const filteredUserData = dataListUser.filter((user) =>
-    user.addres?.toLowerCase().includes(currentKotaTambah?.toLowerCase() || "")
+  const filteredUserData = dataListUser.filter(
+    (user) =>
+      user.role === "petugas" &&
+      user.addres?.toLowerCase().includes(currentKotaTambah?.toLowerCase() || "")
   );
 
   useEffect(() => {
@@ -122,16 +124,31 @@ const pengaduan = () => {
 
   const handleSearch = (text: string) => {
     const searchText = text.toLowerCase();
+    let filteredData = [...dataList];
+
+    if (session?.user) {
+      if (session.user.role === "admin") {
+        filteredData = filteredData.filter(
+          (item) => item.kabupatenkota === session.user.pengguna.addres
+        );
+      } else if (session.user.role === "petugas") {
+        filteredData = filteredData.filter(
+          (item) =>
+            item.kabupatenkota === session.user.pengguna.addres &&
+            item.petugas === session.user.pengguna.username
+        );
+      }
+    }
 
     if (searchText === "") {
-      setDataListSearch(dataList);
+      setDataListSearch(filteredData); // Gunakan data terfilter berdasarkan role
     } else {
-      const filterData = dataList.filter((item) =>
+      const filterBySearch = filteredData.filter((item) =>
         item.judul.toLowerCase().includes(searchText)
       );
-      setDataListSearch(filterData);
-      setCurrentPage(1);
+      setDataListSearch(filterBySearch);
     }
+    setCurrentPage(1); // Reset ke halaman pertama setiap kali search berubah
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -344,6 +361,7 @@ const pengaduan = () => {
               onClose={handleCloseTambahPetugas}
               onSubmit={handleSubmitTambahPetugas}
               data={filteredUserData}
+              role={session?.user?.role}
               initialData={
                 dataList.find((item) => item._id === currentIndexTambah)!
               }

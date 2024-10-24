@@ -8,6 +8,7 @@ import { setSelectedMenu, loadSelectedMenu } from "../_utils/menu/menuSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faFolder, faUser } from "@fortawesome/free-solid-svg-icons";
 import { usePathname, useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 
 const MenuItem = ({
   href,
@@ -62,11 +63,20 @@ const Topbar = () => {
   const dispatch = useDispatch();
   const pathname = usePathname();
   const router = useRouter(); // Untuk navigasi halaman
+  const [role, setRole] = useState("");
 
   const selectedMenuFromRedux = useSelector(
     (state: any) => state.menu.selectedMenu
   );
   const [selectedMenu, setSelectedMenuLocal] = useState<string>("");
+
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      setRole(session.user?.role);
+    }
+  }, [session, status]);
 
   useEffect(() => {
     setSelectedMenuLocal(selectedMenuFromRedux);
@@ -104,7 +114,9 @@ const Topbar = () => {
   }, [pathname, dispatch]);
 
   const handleLogout = async () => {
-    router.push("/");
+    await signOut({
+      callbackUrl: "/", // Redirect to homepage or any other desired URL
+    });
   };
 
   return (
@@ -190,74 +202,91 @@ const Topbar = () => {
               handleMenuClick={handleMenuClick}
             />
           </li>
-          <li>
-            <ExpandableMenu label="Data Master" icon={faFolder}>
-              <MemoizedMenuItem
-                href="/data-master/jenis-pengaduan"
-                label="Jenis Pengaduan"
-                icon={faFolder}
-                menuKey="jenis-pengaduan"
-                selectedMenu={selectedMenu}
-                handleMenuClick={handleMenuClick}
-              />
-              <MemoizedMenuItem
-                href="/data-master/kabupaten-kota"
-                label="Kabupaten / Kota"
-                icon={faFolder}
-                menuKey="kabupaten-kota"
-                selectedMenu={selectedMenu}
-                handleMenuClick={handleMenuClick}
-              />
-            </ExpandableMenu>
-          </li>
-          <li>
-            <ExpandableMenu label="Data Account" icon={faUser}>
-              <MemoizedMenuItem
-                href="/data-account/kab-kota"
-                label="Admin Kab/Kota"
-                icon={faUser}
-                menuKey="admin-kab-kota"
-                selectedMenu={selectedMenu}
-                handleMenuClick={handleMenuClick}
-              />
-              <MemoizedMenuItem
-                href="/data-account/petugas"
-                label="Petugas"
-                icon={faUser}
-                menuKey="petugas"
-                selectedMenu={selectedMenu}
-                handleMenuClick={handleMenuClick}
-              />
-              <MemoizedMenuItem
-                href="/data-account/masyarakat"
-                label="Masyarakat"
-                icon={faUser}
-                menuKey="masyarakat"
-                selectedMenu={selectedMenu}
-                handleMenuClick={handleMenuClick}
-              />
-            </ExpandableMenu>
-          </li>
-          <li>
-            <MemoizedMenuItem
-              href="/pengaduan"
-              label="Data Pengaduan"
-              icon={faFolder}
-              menuKey="pengaduan"
-              selectedMenu={selectedMenu}
-              handleMenuClick={handleMenuClick}
-            />
-          </li>
-          <li>
-            <MemoizedMenuItem
-              href="/sertifikat"
-              label="Data Sertifikat"
-              icon={faFolder}
-              menuKey="sertifikat"
-              selectedMenu={selectedMenu}
-              handleMenuClick={handleMenuClick}
-            />
-          </li>
+          {role !== "" && (
+            <>
+              {role === "super admin" && (
+                <li>
+                  <ExpandableMenu label="Data Master" icon={faFolder}>
+                    <MemoizedMenuItem
+                      href="/data-master/jenis-pengaduan"
+                      label="Jenis Pengaduan"
+                      icon={faFolder}
+                      menuKey="jenis-pengaduan"
+                      selectedMenu={selectedMenu}
+                      handleMenuClick={handleMenuClick}
+                    />
+                    <MemoizedMenuItem
+                      href="/data-master/kabupaten-kota"
+                      label="Kabupaten / Kota"
+                      icon={faFolder}
+                      menuKey="kabupaten-kota"
+                      selectedMenu={selectedMenu}
+                      handleMenuClick={handleMenuClick}
+                    />
+                  </ExpandableMenu>
+                </li>
+              )}
+              {(role === "admin" || role === "super admin") && (
+                <li>
+                  <ExpandableMenu label="Data Account" icon={faUser}>
+                    {session?.user?.role === "super admin" && (
+                      <MemoizedMenuItem
+                        href="/data-account/kab-kota"
+                        label="Admin Kab/Kota"
+                        icon={faUser}
+                        menuKey="admin-kab-kota"
+                        selectedMenu={selectedMenu}
+                        handleMenuClick={handleMenuClick}
+                      />
+                    )}
+                    {(role === "admin" || role === "super admin") && (
+                      <>
+                        <MemoizedMenuItem
+                          href="/data-account/petugas"
+                          label="Petugas"
+                          icon={faUser}
+                          menuKey="petugas"
+                          selectedMenu={selectedMenu}
+                          handleMenuClick={handleMenuClick}
+                        />
+                        <MemoizedMenuItem
+                          href="/data-account/masyarakat"
+                          label="Masyarakat"
+                          icon={faUser}
+                          menuKey="masyarakat"
+                          selectedMenu={selectedMenu}
+                          handleMenuClick={handleMenuClick}
+                        />
+                      </>
+                    )}
+                  </ExpandableMenu>
+                </li>
+              )}
+
+              <li>
+                <MemoizedMenuItem
+                  href="/pengaduan"
+                  label="Data Pengaduan"
+                  icon={faFolder}
+                  menuKey="pengaduan"
+                  selectedMenu={selectedMenu}
+                  handleMenuClick={handleMenuClick}
+                />
+              </li>
+              {(role === "admin" || role === "super admin") && (
+                <li>
+                  <MemoizedMenuItem
+                    href="/sertifikat"
+                    label="Data Sertifikat"
+                    icon={faFolder}
+                    menuKey="sertifikat"
+                    selectedMenu={selectedMenu}
+                    handleMenuClick={handleMenuClick}
+                  />
+                </li>
+              )}
+            </>
+          )}
         </ul>
       </div>
     </>
