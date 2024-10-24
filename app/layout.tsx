@@ -30,14 +30,15 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/logo-kecil.png" type="image/png" />
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
+        <title>{String(metadata.title) || "Default Title"}</title>
+        <meta
+          name="description"
+          content={metadata.description || "Default description"}
+        />
       </head>
-      <body className={`${Poppins.variable} antialiased bg-slate-100`}>
+      <body className={`${Poppins.variable || ""} antialiased bg-slate-100`}>
         <ReduxProvider store={store}>
           <SessionProvider>
-            {" "}
-            {/* Wrap everything with SessionProvider */}
             <ToastContainer />
             {pathname !== "/" ? (
               <>
