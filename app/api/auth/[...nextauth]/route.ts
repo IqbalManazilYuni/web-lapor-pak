@@ -4,7 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
 import type { NextAuthOptions } from 'next-auth'; // Importing NextAuthOptions for type safety
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             name: 'Credentials',
@@ -42,7 +42,7 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     session: {
-        strategy: 'jwt' as const, // Ensure this is treated as a constant
+        strategy: 'jwt',
     },
     callbacks: {
         async jwt({ token, user }) {
