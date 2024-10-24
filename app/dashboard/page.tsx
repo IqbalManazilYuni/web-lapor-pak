@@ -32,7 +32,7 @@ const dashboard = () => {
     bulan: "",
     jumlahLaporan: "",
   });
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState<string | undefined>(undefined);
 
   const { data: session, status } = useSession();
 
