@@ -48,7 +48,7 @@ const authOptions: NextAuthOptions = {
         async jwt({ token, user }) {
             if (user) {
                 token.token = user.token;
-                token.role = user.pengguna.role;
+                token.role = user.pengguna?.role;
                 token.expiry = user.expiry;
                 token.pengguna = user.pengguna;
             }
