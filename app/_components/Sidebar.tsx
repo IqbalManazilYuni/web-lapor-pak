@@ -73,7 +73,7 @@ const SidebarComponent = () => {
 
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
-      setRole(session.user?.role);
+      setRole(session.user.role);
     }
   }, [session, status]);
   const selectedMenuFromRedux = useSelector(
