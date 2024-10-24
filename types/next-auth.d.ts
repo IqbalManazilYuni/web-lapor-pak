@@ -16,7 +16,7 @@ declare module "next-auth" {
             username: string;
             name: string;
             nomor_hp: string;
-            address: string; // Corrected spelling from 'addres' to 'address'
+            addres: string; // Corrected spelling from 'addres' to 'address'
             role: string; // Role inside pengguna
             uri_profle: string;
         };
