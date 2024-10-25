@@ -90,10 +90,18 @@ const sertifikat = () => {
   };
 
   const handleOpenImage = (id: string) => {
-    const data = currentDataList.filter((item) => item._id === id);
-    const uri = data[0].uri_pdf;
-    window.open(uri);
+    const data = currentDataList.find((item) => item._id === id);
+    
+    if (data) {
+      const uri = data.uri_pdf.startsWith("http")
+        ? data.uri_pdf
+        : `https://${data.uri_pdf}`; // Pastikan URL absolut
+      window.open(uri, "_blank");
+    } else {
+      console.error("Data not found");
+    }
   };
+  
 
   const router = useRouter();
   useEffect(() => {
