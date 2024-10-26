@@ -7,9 +7,17 @@ import React, { memo, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedMenu, loadSelectedMenu } from "../_utils/menu/menuSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faFolder, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHome,
+  faFolder,
+  faUser,
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import ModalProfile from "./ModalProfile";
+import { AppDispatch, RootState } from "../_store/store";
+import { fetchDataKK } from "../_utils/data/dataSliceKK";
 
 const MenuItem = ({
   href,
@@ -61,14 +69,28 @@ const ExpandableMenu = ({
 
 const Topbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const { items: dataListKK } = useSelector((state: RootState) => state.data1);
   const pathname = usePathname();
   const [role, setRole] = useState<string | undefined>(undefined);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const selectedMenuFromRedux = useSelector(
     (state: any) => state.menu.selectedMenu
   );
   const [selectedMenu, setSelectedMenuLocal] = useState<string>("");
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSubmitTambah = () => {
+    handleCloseModal();
+  };
 
   const { data: session, status } = useSession();
 
@@ -92,6 +114,7 @@ const Topbar = () => {
 
   useEffect(() => {
     dispatch(loadSelectedMenu());
+    dispatch(fetchDataKK());
   }, [dispatch]);
 
   // Mapping pathname untuk sinkronisasi dengan menu
@@ -108,14 +131,14 @@ const Topbar = () => {
     };
 
     if (pathToMenu[pathname]) {
-      setSelectedMenuLocal(pathToMenu[pathname]); // Update state lokal cepat
-      dispatch(setSelectedMenu(pathToMenu[pathname])); // Update Redux
+      setSelectedMenuLocal(pathToMenu[pathname]);
+      dispatch(setSelectedMenu(pathToMenu[pathname]));
     }
   }, [pathname, dispatch]);
 
   const handleLogout = async () => {
     await signOut({
-      callbackUrl: "/", // Redirect to homepage or any other desired URL
+      callbackUrl: "/",
     });
   };
 
@@ -162,19 +185,31 @@ const Topbar = () => {
                 tabIndex={0}
                 className="menu dropdown-content bg-base-100 rounded-box z-[1] mt-4 w-52 p-2 shadow"
               >
-                <li>
-                  <a className="font-Poppins font-bold text-md">Profile</a>
+                <li onClick={() => handleOpenModal()}>
+                  <div className="flex items-center">
+                    <FontAwesomeIcon icon={faUser} />
+                    <a className="font-Poppins font-bold text-md">Profile</a>
+                  </div>
                 </li>
                 <li onClick={() => handleLogout()}>
-                  <a className="font-Poppins font-bold text-md">Logout</a>
+                  <div className="flex items-center">
+                    <FontAwesomeIcon icon={faRightFromBracket} />
+                    <a className="font-Poppins font-bold text-md">Logout</a>
+                  </div>
                 </li>
               </ul>
             </div>
           </div>
         </div>
+        <ModalProfile
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSubmit={handleSubmitTambah}
+          initialData={session?.user?.pengguna || {}}
+          data={dataListKK}
+        />
       </div>
 
-      {/* Sidebar overlay for mobile */}
       <div
         className={`xl:hidden fixed inset-0 z-20 bg-black bg-opacity-50 transition-opacity ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"

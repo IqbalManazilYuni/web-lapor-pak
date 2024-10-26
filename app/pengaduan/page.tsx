@@ -281,7 +281,7 @@ const pengaduan = () => {
                               : "Selesai"}
                           </div>
                         </td>
-                        <td className="xl:grid xl:grid-cols-2 xl:gap-1 justify-center items-center">
+                        <td className="xl:space-x-2 flex flex-col xl:flex-row justify-center items-center">
                           <button
                             className="bg-blue-100 w-16 h-8 rounded-2xl hover:bg-blue-200 flex items-center justify-center my-2 xl:my-0"
                             onClick={() => handleOpenImage(item._id)}

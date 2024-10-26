@@ -14,7 +14,7 @@ const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 try {
-                    const res = await axios.post('https://be-lapor-pak.vercel.app/api/pengguna/login/web', {
+                    const res = await axios.post('http://localhost:5000/api/pengguna/login/web', {
                         username: credentials?.username,
                         password: credentials?.password,
                     });

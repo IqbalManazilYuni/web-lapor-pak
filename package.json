@@ -16,6 +16,7 @@
     "axios": "^1.7.7",
     "crypto-js": "^4.2.0",
     "formik": "^2.4.6",
+    "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.2",
     "next": "14.2.15",
     "next-auth": "^4.24.8",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
+    "@types/json2csv": "^5.0.7",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20",
     "@types/react": "^18",

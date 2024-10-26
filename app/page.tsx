@@ -66,7 +66,6 @@ const HomePage: React.FC = () => {
           console.log("User data:", data.user);
           await router.push("/dashboard");
           toast.success("Login Berhasil");
-          setIsSubmitting(false);
         }
       } else {
         toast.error("Kesalahan Saat Proses Login");
@@ -76,6 +75,8 @@ const HomePage: React.FC = () => {
       setIsSubmitting(false);
       console.error("Error during login:", error);
       toast.error("Terjadi kesalahan. Coba lagi nanti.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

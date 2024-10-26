@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
-import { faList, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faList, faPlus, faPrint } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,7 @@ import SkeletonLoading from "../_components/skeletonloading/SkeletonLoading";
 import ModalTambahSertifikat from "../_components/dashboard/modal-tambah-sertifikat/ModalTambahSertifikat";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { exportToCSV } from "../_utils/export_csv";
 
 const dashboard = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -125,9 +126,13 @@ const dashboard = () => {
     }
   };
 
+  const handlePrint = () => {
+    exportToCSV(currentDataList, "Data Jumlah Pengaduan.csv");
+  };
+
   return (
     <div className="flex p-4 flex-col">
-      <div className="font-Poppins font-bold text-3xl">Hallo,</div>
+      <div className="font-Poppins font-bold text-3xl">{`Hallo, ${session?.user.pengguna?.username || "Pengguna"}`}</div>
       <div className="font-Poppins font-normal text-lg">
         Selamat Datang Di Dashabord Admin
       </div>
@@ -138,11 +143,20 @@ const dashboard = () => {
       ) : (
         <div className="bg-white p-4 h-full w-full my-2 rounded-xl flex flex-col shadow-xl">
           <div className="flex flex-row pt-3 pb-5">
-            <div className="bg-base-100 w-auto flex flex-col xl:flex-row xl:items-center justify-start">
+            <div className="bg-base-100 flex flex-col xl:flex-row xl:items-center justify-start  w-1/2">
               <FontAwesomeIcon icon={faList} className="w-6 h-6" />
               <span className="xl:ml-2 font-Poppins font-semibold text-3xl">
                 Jumlah Pengaduan Masyarakat
               </span>
+            </div>
+            <div className="flex justify-end items-center xl:items-start w-1/2">
+              <button
+                onClick={handlePrint}
+                className="bg-green-200 text-green-700 rounded-2xl w-36 h-10 hover:bg-green-100 flex items-center justify-center"
+              >
+                <FontAwesomeIcon icon={faPrint} className="mx-1 w-4 h-4" />
+                <span>Cetak CSV</span>
+              </button>
             </div>
           </div>
           <div className="border" />
