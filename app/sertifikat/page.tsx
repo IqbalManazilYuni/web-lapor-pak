@@ -14,6 +14,7 @@ import { AppDispatch, RootState } from "../_store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDataSertifikat } from "../_utils/data/dataSertifikat";
 import { useRouter } from "next/navigation";
+import ModalHapusSertifikat from "../_components/ModalHapusSertifikat";
 const sertifikat = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -26,25 +27,25 @@ const sertifikat = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  // const [currentDeleteIndex, setCurrentDeleteIndex] = useState<string | null>(
-  //   null
-  // );
-  // const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [currentDeleteIndex, setCurrentDeleteIndex] = useState<string | null>(
+    null
+  );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  // const handleSubmitDelete = () => {
-  //   handleCloseDeleteModal();
-  // };
+  const handleSubmitDelete = () => {
+    handleCloseDeleteModal();
+  };
 
-  // const handleOpenDeleteModal = (id: string) => {
-  //   const item = dataList.find((item) => item._id === id);
-  //   if (item) {
-  //     setCurrentDeleteIndex(id);
-  //     setIsDeleteModalOpen(true);
-  //   }
-  // };
-  // const handleCloseDeleteModal = () => {
-  //   setIsDeleteModalOpen(false);
-  // };
+  const handleOpenDeleteModal = (id: string) => {
+    const item = dataList.find((item) => item._id === id);
+    if (item) {
+      setCurrentDeleteIndex(id);
+      setIsDeleteModalOpen(true);
+    }
+  };
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
 
   useEffect(() => {
     dispatch(fetchDataSertifikat());
@@ -95,7 +96,7 @@ const sertifikat = () => {
     if (data) {
       const uri = data.uri_pdf.startsWith("http")
         ? data.uri_pdf
-        : `https://${data.uri_pdf}`; // Pastikan URL absolut
+        : `https://${data.uri_pdf}`;
       window.open(uri, "_blank");
     } else {
       console.error("Data not found");
@@ -195,10 +196,10 @@ const sertifikat = () => {
                           </button>
                           <button
                             className="bg-red-100  w-24 h-8 rounded-2xl hover:bg-red-200 flex items-center justify-center my-2 xl:my-0"
-                            // onClick={() => handleOpenDeleteModal(item._id)}
+                            onClick={() => handleOpenDeleteModal(item._id)}
                           >
                             <FontAwesomeIcon
-                              icon={faTrash} // Trash icon
+                              icon={faTrash}
                               className="mx-1 w-3 h-3 text-red-600"
                             />
                           </button>
@@ -236,19 +237,8 @@ const sertifikat = () => {
               </div>
             </div>
           </div>
-          {/* {currentIndexTambah !== null && currentKotaTambah !== null && (
-            <ModalTambahPetugasPengaduan
-              isOpen={isModalTambah}
-              onClose={handleCloseTambahPetugas}
-              onSubmit={handleSubmitTambahPetugas}
-              data={filteredUserData}
-              initialData={
-                dataList.find((item) => item._id === currentIndexTambah)!
-              }
-            />
-          )}
           {currentDeleteIndex !== null && (
-            <ModalHapusPengaduan
+            <ModalHapusSertifikat
               isOpen={isDeleteModalOpen}
               onClose={handleCloseDeleteModal}
               onSubmit={handleSubmitDelete}
@@ -256,7 +246,7 @@ const sertifikat = () => {
                 dataList.find((item) => item._id === currentDeleteIndex)!
               }
             />
-          )} */}
+          )}
         </div>
       )}
     </div>
