@@ -70,10 +70,12 @@ const HomePage: React.FC = () => {
         }
       } else {
         toast.error(result?.error);
+        setIsSubmitting(false);
       }
     } catch (error) {
+      setIsSubmitting(false);
       console.error("Error during login:", error);
-      alert("Terjadi kesalahan. Coba lagi nanti.");
+      toast.error("Terjadi kesalahan. Coba lagi nanti.");
     }
   };
 
