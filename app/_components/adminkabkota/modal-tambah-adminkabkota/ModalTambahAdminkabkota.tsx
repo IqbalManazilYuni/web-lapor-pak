@@ -9,6 +9,7 @@ import { KabupatenKota } from "@/app/_store/jenisPengaduanModel";
 import EachUtils from "@/app/_utils/EachUtils/EachUtils";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
 import axiosInstance from "@/app/_utils/interceptor";
+import { toast } from "react-toastify";
 
 interface ModalTambahAdminkabkotaProps {
   isOpen: boolean;
@@ -33,7 +34,7 @@ const ModalTambahAdminkabkota: React.FC<ModalTambahAdminkabkotaProps> = ({
     name: "",
     username: "",
     password: "",
-    role:"admin",
+    role: "admin",
   };
 
   const validationSchema = Yup.object({
@@ -60,7 +61,7 @@ const ModalTambahAdminkabkota: React.FC<ModalTambahAdminkabkotaProps> = ({
                 { headers: { "Content-Type": "application/json" } }
               );
               if (response.status !== 201)
-                throw new Error("Network response was not ok");
+                toast.error("Terjadi Kesalahan Proses Inputan");
 
               dispatch(fetchDataUser());
               onClose();
