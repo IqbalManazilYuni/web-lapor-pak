@@ -4,6 +4,7 @@ import { AppDispatch } from "@/app/_store/store";
 import axiosInstance from "@/app/_utils/interceptor";
 import { useDispatch } from "react-redux";
 import { fetchDataSertifikat } from "../_utils/data/dataSertifikat";
+import { useState } from "react";
 
 interface ModalHapusSertifikatProps {
   isOpen: boolean;
@@ -18,9 +19,11 @@ const ModalHapusSertifikat: React.FC<ModalHapusSertifikatProps> = ({
   initialData,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const hapusData = async () => {
     try {
+      setIsSubmitting(true);
       const response = await axiosInstance.delete(
         `/sertifikat/delete-sertifikat/${initialData._id}`,
         { headers: { "Content-Type": "application/json" } }
@@ -31,6 +34,8 @@ const ModalHapusSertifikat: React.FC<ModalHapusSertifikatProps> = ({
       onClose();
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
   if (!isOpen) return null;
@@ -51,10 +56,13 @@ const ModalHapusSertifikat: React.FC<ModalHapusSertifikatProps> = ({
           </button>
           <button
             type="button"
+            disabled={isSubmitting}
             onClick={hapusData}
-            className="mr-2 bg-green-300 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded"
+            className={`${
+              isSubmitting ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"
+            } text-white font-semibold py-2 px-4 rounded`}
           >
-            Hapus
+            {isSubmitting ? "Processing..." : "Hapus"}
           </button>
         </div>
       </div>

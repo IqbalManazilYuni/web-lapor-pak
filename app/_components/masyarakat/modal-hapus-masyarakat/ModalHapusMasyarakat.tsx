@@ -3,6 +3,7 @@
 import { AppDispatch } from "@/app/_store/store";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
 import axiosInstance from "@/app/_utils/interceptor";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -19,20 +20,24 @@ const ModalHapusMasyarakat: React.FC<ModalHapusMasyarakatProps> = ({
   initialData,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const hapusData = async () => {
     try {
+      setIsSubmitting(true);
       const response = await axiosInstance.delete(
         `/pengguna/delete-pengguna/${initialData._id}`,
         { headers: { "Content-Type": "application/json" } }
       );
       if (response.status !== 200)
         throw new Error("Network response was not ok");
-      if (response.status === 200)toast.success(response.data.message);
+      if (response.status === 200) toast.success(response.data.message);
       dispatch(fetchDataUser());
       onClose();
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
   if (!isOpen) return null;
@@ -53,10 +58,13 @@ const ModalHapusMasyarakat: React.FC<ModalHapusMasyarakatProps> = ({
           </button>
           <button
             type="button"
+            disabled={isSubmitting}
             onClick={hapusData}
-            className="mr-2 bg-green-300 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded"
+            className={`${
+              isSubmitting ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"
+            } text-white font-semibold py-2 px-4 rounded`}
           >
-            Hapus
+            {isSubmitting ? "Processing..." : "Hapus"}
           </button>
         </div>
       </div>

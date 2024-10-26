@@ -3,6 +3,7 @@
 import { AppDispatch } from "@/app/_store/store";
 import { fetchData } from "@/app/_utils/data/dataSlice";
 import axiosInstance from "@/app/_utils/interceptor";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 interface ModalHapusJenisProps {
@@ -18,9 +19,10 @@ const ModalHapusJenis: React.FC<ModalHapusJenisProps> = ({
   initialData,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const hapusData = async () => {
     try {
+      setIsSubmitting(true);
       const response = await axiosInstance.delete(
         `/jenispengaduan/${initialData._id}`,
         { headers: { "Content-Type": "application/json" } }
@@ -32,6 +34,8 @@ const ModalHapusJenis: React.FC<ModalHapusJenisProps> = ({
       onClose();
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
   if (!isOpen) return null;
@@ -53,10 +57,13 @@ const ModalHapusJenis: React.FC<ModalHapusJenisProps> = ({
           </button>
           <button
             type="button"
+            disabled={isSubmitting}
             onClick={hapusData}
-            className="mr-2 bg-green-300 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded"
+            className={`${
+              isSubmitting ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"
+            } text-white font-semibold py-2 px-4 rounded`}
           >
-            Hapus
+            {isSubmitting ? "Processing..." : "Hapus"}
           </button>
         </div>
       </div>

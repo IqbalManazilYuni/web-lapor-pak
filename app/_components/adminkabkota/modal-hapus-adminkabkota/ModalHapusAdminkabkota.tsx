@@ -3,6 +3,7 @@
 import { AppDispatch } from "@/app/_store/store";
 import { fetchDataUser } from "@/app/_utils/data/dataUser";
 import axiosInstance from "@/app/_utils/interceptor";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 interface ModalHapusAdminkabkotaProps {
@@ -18,9 +19,10 @@ const ModalHapusAdminkabkota: React.FC<ModalHapusAdminkabkotaProps> = ({
   initialData,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const hapusData = async () => {
     try {
+      setIsSubmitting(true);
       const response = await axiosInstance.delete(
         `/pengguna/delete-pengguna/${initialData._id}`,
         { headers: { "Content-Type": "application/json" } }
@@ -32,6 +34,8 @@ const ModalHapusAdminkabkota: React.FC<ModalHapusAdminkabkotaProps> = ({
       onClose();
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
   if (!isOpen) return null;
@@ -40,8 +44,7 @@ const ModalHapusAdminkabkota: React.FC<ModalHapusAdminkabkotaProps> = ({
       <div className="bg-white rounded-lg shadow-lg p-6 w-96">
         <h2 className="text-lg font-semibold mb-4">Hapus Data</h2>
         <h4 className="text-dm font-normal mb-8">
-          Apakah Anda Ingin Menghapus Data Admin:{" "}
-          {initialData.username} ?
+          Apakah Anda Ingin Menghapus Data Admin: {initialData.username} ?
         </h4>
         <div className="flex justify-end">
           <button
@@ -53,10 +56,13 @@ const ModalHapusAdminkabkota: React.FC<ModalHapusAdminkabkotaProps> = ({
           </button>
           <button
             type="button"
+            disabled={isSubmitting}
             onClick={hapusData}
-            className="mr-2 bg-green-300 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded"
+            className={`${
+              isSubmitting ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"
+            } text-white font-semibold py-2 px-4 rounded`}
           >
-            Hapus
+            {isSubmitting ? "Processing..." : "Hapus"}
           </button>
         </div>
       </div>
