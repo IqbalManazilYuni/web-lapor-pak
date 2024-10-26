@@ -69,7 +69,7 @@ const HomePage: React.FC = () => {
           setIsSubmitting(false);
         }
       } else {
-        toast.error(result?.error);
+        toast.error("Kesalahan Saat Proses Login");
         setIsSubmitting(false);
       }
     } catch (error) {
