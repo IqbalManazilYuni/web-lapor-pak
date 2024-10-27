@@ -76,7 +76,7 @@ const ModalProfile: React.FC<ModalProfileProps> = ({
               <div className="xl:grid xl:grid-cols-2 xl:gap-2 flex flex-col">
                 <div className="mb-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    Username Pengguna::
+                    Username Pengguna:
                   </label>
                   <Field
                     type="text"
