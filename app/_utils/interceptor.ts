@@ -3,7 +3,7 @@ import axios from 'axios';
 import { getSession } from 'next-auth/react';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: 'https://be-lapor-pak.vercel.app/api',
 });
 axiosInstance.interceptors.request.use(
     async (config) => {
